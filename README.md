@@ -3,6 +3,8 @@
 
 सम्पूर्ण शुद्ध देवनागरी पाठ, कराओके-शैली ऑडियो प्लेयर, डिजिटल जप माला एवं ऑफ़लाइन PWA क्षमता से युक्त एक दिव्य भक्ति वेब एप्लिकेशन।
 
+🌐 **लाइव वेब ऐप (Live URL):** [https://skverma895746.github.io/Hunuman-chalisha-PWA-app/](https://skverma895746.github.io/Hunuman-chalisha-PWA-app/)
+
 ---
 
 ## 🌟 प्रमुख विशेषताएं (Key Features)

@@ -694,6 +694,7 @@
           <div class="verse-meta">
             <span class="verse-badge">${doha.label}</span>
             <div class="verse-actions">
+              <button class="verse-action-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${doha.start}, '${doha.label}')">▶</button>
               <button class="verse-action-btn ${isBookmarked ? 'bookmarked' : ''}" title="बुकमार्क करें" onclick="window.hanumanApp.toggleBookmark('${doha.id}', '${doha.label}')">
                 ${isBookmarked ? '★' : '☆'}
               </button>
@@ -723,6 +724,7 @@
           <div class="verse-meta">
             <span class="verse-badge">चौपाई ${chaupai.num}</span>
             <div class="verse-actions">
+              <button class="verse-action-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${chaupai.start}, 'चौपाई ${chaupai.num}')">▶</button>
               <button class="verse-action-btn ${isBookmarked ? 'bookmarked' : ''}" title="बुकमार्क करें" onclick="window.hanumanApp.toggleBookmark('${verseId}', 'चौपाई ${chaupai.num}')">
                 ${isBookmarked ? '★' : '☆'}
               </button>
@@ -751,6 +753,7 @@
         <div class="verse-meta">
           <span class="verse-badge">${closing.label}</span>
           <div class="verse-actions">
+            <button class="verse-action-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${closing.start}, '${closing.label}')">▶</button>
             <button class="verse-action-btn ${isClosingBookmarked ? 'bookmarked' : ''}" title="बुकमार्क करें" onclick="window.hanumanApp.toggleBookmark('${closing.id}', '${closing.label}')">
               ${isClosingBookmarked ? '★' : '☆'}
             </button>
@@ -1105,34 +1108,51 @@
   }
 
   /* ==========================================================================
-     7. CHAUPAI LIVE SYNC & HIGHLIGHTING (स्वर्णिम कराओके आभा)
+     7. CHAUPAI LIVE SYNC & SMART AUTO-SCALING ENGINE (स्मार्ट टाइम-स्केलिंग)
      ========================================================================== */
+
+  const BASE_REFERENCE_DURATION = 180; // 3 minutes baseline calibration
+
+  function getAudioTimeScale() {
+    const audio = dom.audioElement;
+    if (audio && audio.duration && !isNaN(audio.duration) && audio.duration > 30) {
+      return audio.duration / BASE_REFERENCE_DURATION;
+    }
+    return 1.0;
+  }
 
   function syncChaupaiHighlight(currentTime) {
     let activeCard = null;
+    const scale = getAudioTimeScale();
 
-    // Check Opening Dohas
+    // 1. Check Opening Dohas (with auto-proportional scaling)
     for (const doha of CHALISA_DATA.openingDohas) {
-      if (currentTime >= doha.start && currentTime < doha.end) {
+      const scaledStart = doha.start * scale;
+      const scaledEnd = doha.end * scale;
+      if (currentTime >= scaledStart && currentTime < scaledEnd) {
         activeCard = document.getElementById(doha.id);
         break;
       }
     }
 
-    // Check 40 Chaupais
+    // 2. Check 40 Chaupais (with auto-proportional scaling)
     if (!activeCard) {
       for (const chaupai of CHALISA_DATA.chaupais) {
-        if (currentTime >= chaupai.start && currentTime < chaupai.end) {
+        const scaledStart = chaupai.start * scale;
+        const scaledEnd = chaupai.end * scale;
+        if (currentTime >= scaledStart && currentTime < scaledEnd) {
           activeCard = document.getElementById(`chaupai-${chaupai.num}`);
           break;
         }
       }
     }
 
-    // Check Closing Doha
+    // 3. Check Closing Doha (with auto-proportional scaling)
     if (!activeCard) {
       const closing = CHALISA_DATA.closingDoha;
-      if (currentTime >= closing.start && currentTime < closing.end) {
+      const scaledStart = closing.start * scale;
+      const scaledEnd = closing.end * scale;
+      if (currentTime >= scaledStart && currentTime <= scaledEnd) {
         activeCard = document.getElementById(closing.id);
       }
     }
@@ -1155,6 +1175,22 @@
   function clearHighlights() {
     const active = document.querySelectorAll('.verse-card.active-playback');
     active.forEach(el => el.classList.remove('active-playback'));
+  }
+
+  // Jump Audio directly to specific Chaupai / Doha (Tap-to-Sync)
+  function seekToVerse(baseStartSecond, label) {
+    const audio = dom.audioElement;
+    if (!audio) return;
+    const scale = getAudioTimeScale();
+    const targetTime = baseStartSecond * scale;
+
+    if (audio.duration && targetTime <= audio.duration) {
+      audio.currentTime = targetTime;
+      if (audio.paused) {
+        audio.play().catch(e => console.log('Autoplay blocked:', e));
+      }
+      showToast(`${label} पर सिंक किया गया 🎵`);
+    }
   }
 
   /* ==========================================================================
@@ -1261,6 +1297,10 @@
      ========================================================================== */
 
   window.hanumanApp = {
+    seekTo: function (startSec, label) {
+      seekToVerse(startSec, label);
+    },
+
     toggleBhavarth: function (id) {
       const el = document.getElementById(`bhavarth-${id}`);
       if (el) {

@@ -4,5 +4,5 @@
 User-agent: *
 Allow: /
 
-# Sitemap Location
-Sitemap: https://skverma895746.github.io/Hanuman-chalisha-PWA-app/sitemap.xml
+# Sitemap Location on GitHub Pages
+Sitemap: https://skverma895746.github.io/Hunuman-chalisha-PWA-app/sitemap.xml
