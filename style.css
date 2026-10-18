@@ -482,20 +482,76 @@ body {
 /* Active Highlight during Audio Playback (Karaoke Glow) */
 .verse-card.active-playback {
   border: 2px solid var(--gold-bright);
-  background: var(--saffron-subtle);
-  box-shadow: var(--shadow-glow);
-  transform: scale(1.015);
-  transition: var(--transition);
+  border-left: 8px solid var(--saffron-primary);
+  background:
+    linear-gradient(135deg, rgba(255, 215, 0, 0.30) 0%, rgba(255, 152, 0, 0.14) 100%),
+    var(--bg-card);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.30), 0 10px 28px rgba(230, 81, 0, 0.30);
+  transform: scale(1.025);
+  z-index: 2;
+  margin-top: 22px;
+  animation: verse-enter 0.5s ease-out, verse-ring 2s ease-in-out 0.5s infinite;
 }
 
+/* "अभी चल रहा है" live label on top of the active verse */
 .verse-card.active-playback::before {
-  content: "▶";
+  content: "🔊 अभी पाठ चल रहा है";
   position: absolute;
-  left: 8px;
-  top: 14px;
-  font-size: 0.75rem;
-  color: var(--saffron-primary);
+  top: -13px;
+  left: 14px;
+  padding: 3px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: linear-gradient(90deg, var(--saffron-primary), #FF8F00);
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(230, 81, 0, 0.45);
   animation: pulse-icon 1s infinite alternate;
+}
+
+.verse-card.active-playback .verse-text {
+  color: var(--maroon);
+  font-weight: 700;
+  text-shadow: 0 1px 8px rgba(255, 215, 0, 0.55);
+}
+
+[data-theme="dark"] .verse-card.active-playback {
+  background:
+    linear-gradient(135deg, rgba(255, 193, 7, 0.22) 0%, rgba(255, 112, 67, 0.12) 100%),
+    var(--bg-card);
+}
+
+[data-theme="dark"] .verse-card.active-playback .verse-text {
+  color: #FFD54F;
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.45);
+}
+
+/* Paath chalte waqt baaki chaupaiyan halki ho jayein, taaki chalti hui chaupai alag dikhe */
+body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-playback) {
+  opacity: 0.5;
+  transform: scale(0.985);
+}
+
+body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-playback):hover,
+body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-playback):active {
+  opacity: 1;
+}
+
+@keyframes verse-enter {
+  0%   { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.9); }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1.025); }
+}
+
+@keyframes verse-ring {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.30), 0 10px 28px rgba(230, 81, 0, 0.30); }
+  50%      { box-shadow: 0 0 0 9px rgba(255, 215, 0, 0.12), 0 12px 34px rgba(230, 81, 0, 0.42); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verse-card.active-playback,
+  .verse-card.active-playback::before { animation: none; }
 }
 
 @keyframes pulse-icon {
@@ -591,7 +647,7 @@ body {
   font-weight: 700;
   color: var(--saffron-primary);
   margin-right: 6px;
-  font-size: 0.85rem;
+  font-size: calc(var(--font-scale) * 0.85);
 }
 
 /* ================= 108 Divine Names Grid ================= */
@@ -635,7 +691,7 @@ body {
 }
 
 .name-mantra {
-  font-size: 1rem;
+  font-size: calc(var(--font-scale) * 1);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -1399,7 +1455,7 @@ body.mode-audio-only .verse-bhavarth {
     display: none; /* Keep header clean on ultra-narrow phones */
   }
   .verse-text {
-    font-size: calc(var(--font-scale) * 1rem);
+    font-size: var(--font-scale);
   }
   .jaap-counter-display {
     width: 150px;
@@ -1410,3 +1466,7 @@ body.mode-audio-only .verse-bhavarth {
   }
 }
 
+
+
+/* ===== Font scale: sabhi paath (doha, chaupai, bajrang baan, ashtak, aarti, namavali) ek saath badlein ===== */
+.verse-text, .name-mantra, .verse-bhavarth { transition: font-size 0.15s ease; }

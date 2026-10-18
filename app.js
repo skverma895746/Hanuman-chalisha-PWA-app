@@ -987,6 +987,11 @@
       }
     });
 
+    // Chalte hue audio par body class: baaki chaupaiyan halki dikhane ke liye
+    audio.addEventListener('play', () => dom.body.classList.add('audio-playing'));
+    audio.addEventListener('pause', () => dom.body.classList.remove('audio-playing'));
+    audio.addEventListener('ended', () => dom.body.classList.remove('audio-playing'));
+
     audio.addEventListener('loadedmetadata', () => {
       dom.totalDurationLabel.textContent = formatTime(audio.duration);
     });
@@ -1203,6 +1208,7 @@
     if (activeCard && !activeCard.classList.contains('active-playback')) {
       clearHighlights();
       activeCard.classList.add('active-playback');
+      dom.body.classList.add('has-active-verse');
 
       // Scroll strictly according to song progress, centered in visible reading window
       if (state.autoScroll && !isUserInteractingWithScroll) {
@@ -1237,6 +1243,7 @@
   function clearHighlights() {
     const active = document.querySelectorAll('.verse-card.active-playback');
     active.forEach(el => el.classList.remove('active-playback'));
+    dom.body.classList.remove('has-active-verse');
   }
 
   // Jump Audio directly to specific Chaupai / Doha (Tap-to-Sync)
@@ -1277,10 +1284,14 @@
     }
   }
 
-  function applyFontScale(scale) {
-    state.fontScale = Math.min(Math.max(scale, 0.8), 1.6);
+  function applyFontScale(scale, announce) {
+    const clamped = Math.min(Math.max(scale, 0.8), 2.0);
+    state.fontScale = Math.round(clamped * 10) / 10;
     document.documentElement.style.setProperty('--font-scale', `${state.fontScale}rem`);
-    localStorage.setItem('agy_hanuman_font_scale', state.fontScale.toString());
+    try { localStorage.setItem('agy_hanuman_font_scale', state.fontScale.toString()); } catch (e) {}
+    if (announce) {
+      showToast(`अक्षर आकार: ${Math.round(state.fontScale * 100)}%`);
+    }
   }
 
   /* ==========================================================================
@@ -1567,9 +1578,9 @@
     });
 
     // Font Controls
-    dom.fontDecBtn.addEventListener('click', () => applyFontScale(state.fontScale - 0.1));
-    dom.fontIncBtn.addEventListener('click', () => applyFontScale(state.fontScale + 0.1));
-    dom.fontResetBtn.addEventListener('click', () => applyFontScale(1.0));
+    dom.fontDecBtn.addEventListener('click', () => applyFontScale(state.fontScale - 0.1, true));
+    dom.fontIncBtn.addEventListener('click', () => applyFontScale(state.fontScale + 0.1, true));
+    dom.fontResetBtn.addEventListener('click', () => applyFontScale(1.0, true));
 
     // View Mode Selector
     dom.viewModeButtons.forEach(btn => {
@@ -1621,6 +1632,38 @@
   }
 
   /* ==========================================================================
+     15b. SCREEN WAKE LOCK (ऐप खुली रहने तक स्क्रीन ऑन)
+     ========================================================================== */
+
+  let wakeLockSentinel = null;
+
+  async function requestWakeLock() {
+    if (!('wakeLock' in navigator)) return;
+    if (document.visibilityState !== 'visible') return;
+    if (wakeLockSentinel && !wakeLockSentinel.released) return;
+    try {
+      wakeLockSentinel = await navigator.wakeLock.request('screen');
+      wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+    } catch (err) {
+      console.warn('[WakeLock] request failed:', err && err.message);
+    }
+  }
+
+  function initWakeLock() {
+    requestWakeLock();
+
+    // ऐप पर वापस आने पर (टैब बदलने / लॉक के बाद) फिर से चालू करें
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') requestWakeLock();
+    });
+
+    // कुछ ब्राउज़र (जैसे iOS Safari) पहले स्पर्श के बाद ही अनुमति देते हैं
+    ['click', 'touchstart', 'keydown'].forEach((evt) => {
+      document.addEventListener(evt, requestWakeLock, { passive: true });
+    });
+  }
+
+  /* ==========================================================================
      16. INITIALIZATION BOOTSTRAP
      ========================================================================== */
 
@@ -1638,6 +1681,7 @@
     initJaapCounter();
     initEventListeners();
     registerServiceWorker();
+    initWakeLock();
 
     console.log('॥ श्री हनुमान जी महाराज की जय ॥ App initialized successfully.');
   }

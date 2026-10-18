@@ -1,5 +1,4 @@
-
-const CACHE_NAME = 'hanuman-chalisa-v1.2.0';
+const CACHE_NAME = 'hanuman-chalisa-v1.3.0';
 
 const CORE_ASSETS = [
   './',
