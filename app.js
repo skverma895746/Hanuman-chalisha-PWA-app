@@ -999,7 +999,7 @@
     audio.addEventListener('ended', () => {
       if (!state.isLooping) {
         state.isPlaying = false;
-        dom.btnPlayMaster.innerHTML = '▶';
+        dom.btnPlayMaster.innerHTML ='▶';
         dom.audioSpectrum.classList.remove('playing');
         clearHighlights();
       }
