@@ -6,6 +6,8 @@ const ASSETS_TO_CACHE = [
   './style.css',
   './app.js',
   './manifest.json',
+  './robots.txt',
+  './sitemap.xml',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/hanuman-icon.png'

@@ -1,0 +1,8 @@
+# Robots.txt for Shri Hanuman Chalisa & Devotional Suite
+# Allow all search engine crawlers (Googlebot, Bingbot, etc.) full access
+
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://hanumanchalisa.app/sitemap.xml
