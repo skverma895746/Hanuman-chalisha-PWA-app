@@ -5,4 +5,4 @@ User-agent: *
 Allow: /
 
 # Sitemap Location
-Sitemap: https://hanumanchalisa.app/sitemap.xml
+Sitemap: https://skverma895746.github.io/Hanuman-chalisha-PWA-app/sitemap.xml
