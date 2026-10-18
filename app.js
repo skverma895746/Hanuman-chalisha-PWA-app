@@ -1112,6 +1112,16 @@
      ========================================================================== */
 
   const BASE_REFERENCE_DURATION = 180; // 3 minutes baseline calibration
+  let isUserInteractingWithScroll = false;
+  let userScrollTimeout = null;
+
+  function markUserScrolling() {
+    isUserInteractingWithScroll = true;
+    clearTimeout(userScrollTimeout);
+    userScrollTimeout = setTimeout(() => {
+      isUserInteractingWithScroll = false;
+    }, 3500); // Resume auto-scroll 3.5s after user stops touching
+  }
 
   function getAudioTimeScale() {
     const audio = dom.audioElement;
@@ -1161,15 +1171,34 @@
       clearHighlights();
       activeCard.classList.add('active-playback');
 
-      if (state.autoScroll) {
-        activeCard.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
+      // Scroll strictly according to song progress, centered in visible reading window
+      if (state.autoScroll && !isUserInteractingWithScroll) {
+        scrollToVerseCard(activeCard);
       }
     } else if (!activeCard) {
       clearHighlights();
     }
+  }
+
+  // Centering card directly in the visible reading area (between sticky top nav and bottom audio dock)
+  function scrollToVerseCard(card) {
+    if (!card) return;
+    const navContainer = document.querySelector('.sangrah-nav-container');
+    const dock = document.getElementById('audioPlayerDock');
+
+    const topOffset = navContainer ? navContainer.getBoundingClientRect().bottom : 70;
+    const bottomDockHeight = dock ? (window.innerHeight - dock.getBoundingClientRect().top) : 130;
+
+    const cardRect = card.getBoundingClientRect();
+    const cardTopAbsolute = cardRect.top + window.scrollY;
+
+    const visibleHeight = window.innerHeight - topOffset - bottomDockHeight;
+    const targetY = cardTopAbsolute - topOffset - (visibleHeight - cardRect.height) / 2;
+
+    window.scrollTo({
+      top: Math.max(0, targetY),
+      behavior: 'smooth'
+    });
   }
 
   function clearHighlights() {
@@ -1277,12 +1306,16 @@
     });
 
     dom.jaapResetBtn.addEventListener('click', () => {
-      if (confirm('क्या आप जप काउंटर रीसेट करना चाहते हैं?')) {
-        state.jaapCount = 0;
-        localStorage.setItem('agy_hanuman_jaap_count', '0');
-        updateJaapUI();
-        showToast('जप काउंटर रीसेट किया गया');
-      }
+      showCustomConfirm(
+        'जप माला रीसेट',
+        'क्या आप वर्तमान जप संख्या को शून्य (0) पर रीसेट करना चाहते हैं?',
+        () => {
+          state.jaapCount = 0;
+          localStorage.setItem('agy_hanuman_jaap_count', '0');
+          updateJaapUI();
+          showToast('जप काउंटर शून्य पर रीसेट किया गया 🔄');
+        }
+      );
     });
   }
 
@@ -1416,18 +1449,52 @@
   }
 
   /* ==========================================================================
-     13. TOAST NOTIFICATION
+     13. TOAST & CUSTOM IN-APP CONFIRM NOTIFICATIONS (NO UGLY BROWSER ALERTS)
      ========================================================================== */
 
   let toastTimer = null;
-  function showToast(message) {
+  function showToast(message, icon = "🪔") {
     if (!dom.toastMsg) return;
-    dom.toastMsg.textContent = message;
+    dom.toastMsg.innerHTML = `<span style="font-size:1.15rem; filter: drop-shadow(0 0 4px #FFD700);">${icon}</span> <span>${message}</span>`;
     dom.toastMsg.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
       dom.toastMsg.classList.remove('show');
-    }, 2400);
+    }, 2800);
+  }
+
+  function showCustomConfirm(title, message, onConfirm) {
+    dom.modalTitle.textContent = title;
+    dom.modalBody.innerHTML = `
+      <div class="custom-confirm-box">
+        <span class="custom-confirm-icon">📿</span>
+        <h4 class="custom-confirm-title">${title}</h4>
+        <p class="custom-confirm-desc">${message}</p>
+        <div class="custom-confirm-actions">
+          <button id="btnConfirmCancel" class="btn-confirm-no">रद्द करें</button>
+          <button id="btnConfirmProceed" class="btn-confirm-yes">हाँ, रीसेट करें</button>
+        </div>
+      </div>
+    `;
+    dom.modalOverlay.classList.add('open');
+
+    const cancelBtn = document.getElementById('btnConfirmCancel');
+    const proceedBtn = document.getElementById('btnConfirmProceed');
+
+    if (cancelBtn) {
+      cancelBtn.onclick = () => {
+        dom.modalOverlay.classList.remove('open');
+      };
+    }
+
+    if (proceedBtn) {
+      proceedBtn.onclick = () => {
+        dom.modalOverlay.classList.remove('open');
+        if (typeof onConfirm === 'function') {
+          onConfirm();
+        }
+      };
+    }
   }
 
   /* ==========================================================================
