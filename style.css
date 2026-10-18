@@ -997,7 +997,7 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
 .btn-play-master {
   width: 46px;
   height: 46px;
-  background: linear-gradient(135deg, var(--saffron-primary), #D84315);
+  background: linear-gradient(135deg, var(--saffron-primary), #FF8F00);
   color: #FFFFFF;
   border: none;
   border-radius: 50%;
