@@ -1,0 +1,31 @@
+{
+  "name": "श्री हनुमान चालीसा एवं सम्पूर्ण संग्रह",
+  "short_name": "हनुमान चालीसा",
+  "description": "श्री हनुमान चालीसा, बजरंग बाण, हनुमानाष्टक, आरती एवं 108 नामावली - सम्पूर्ण पाठ व ऑडियो प्लेयर (ऑफ़लाइन PWA)",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1A0F05",
+  "theme_color": "#E65100",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["lifestyle", "books", "music"]
+}

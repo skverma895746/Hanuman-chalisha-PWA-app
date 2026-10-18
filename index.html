@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="श्री हनुमान चालीसा, बजरंग बाण, हनुमानाष्टक, आरती एवं १०८ नामावली - सम्पूर्ण पाठ, ऑडियो प्लेयर एवं जप माला (ऑफ़लाइन PWA)">
+  <meta name="theme-color" content="#E65100">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="हनुमान चालीसा">
+
+  <title>श्री हनुमान चालीसा एवं सम्पूर्ण स्तोत्र संग्रह | Shri Hanuman Chalisa & Stotra Sangrah</title>
+
+  <!-- PWA Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+
+  <!-- Custom Devotional Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Indicator (Fixed Top Bar) -->
+  <div id="readingProgressBar" role="progressbar" aria-label="पाठ प्रगति"></div>
+
+  <!-- Header & Sacred Topbar -->
+  <header class="site-header">
+    <div class="header-topbar">
+      <div class="brand-wrapper">
+        <div class="brand-symbol">
+          <img src="assets/icons/hanuman-icon.png" alt="श्री हनुमान जी" width="44" height="44">
+        </div>
+        <div class="brand-titles">
+          <h1>श्री हनुमान भक्ति संग्रह</h1>
+          <div class="subtitle">चालीसा • बजरंग बाण • अष्टक • आरती • १०८ नाम</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Bookmark Modal Trigger -->
+        <button id="bookmarksBtn" class="icon-btn" title="पसंदीदा / बुकमार्क" aria-label="पसंदीदा चौपाइयाँ">
+          ★
+        </button>
+        <!-- Light / Dark Mode Toggle -->
+        <button id="themeToggleBtn" class="icon-btn" title="रात्रि / दिन का रूप" aria-label="थीम बदलें">
+          🌙
+        </button>
+      </div>
+    </div>
+
+    <!-- Devotional Hero Banner Section -->
+    <div class="hero-devotional">
+      <div class="divine-badge">
+        <span class="diya-icon">🪔</span> ॥ जय श्री राम • जय हनुमान ॥ <span class="diya-icon">🪔</span>
+      </div>
+      <div class="hero-quote">
+        "अतुलितबलधामं हेमशैलाभदेहं, दनुजवनकृशानुं ज्ञानिनामग्रगण्यम्।"
+      </div>
+      <div class="hero-subquote">
+        सकलगुणनिधानं वानराणामधीशं, रघुपतिप्रियभक्तं वातजातं नमामि॥
+      </div>
+    </div>
+  </header>
+
+  <!-- Sangrah Navigation Tabs (Sticky Top) -->
+  <nav class="sangrah-nav-container" aria-label="स्तोत्र संग्रह नेविगेशन">
+    <div class="sangrah-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="chalisa" role="tab">
+        🚩 हनुमान चालीसा
+      </button>
+      <button class="tab-btn" data-tab="bajrangBaan" role="tab">
+        🏹 बजरंग बाण
+      </button>
+      <button class="tab-btn" data-tab="ashtak" role="tab">
+        🛡️ संकटमोचन अष्टक
+      </button>
+      <button class="tab-btn" data-tab="aarti" role="tab">
+        🪔 श्री हनुमान आरती
+      </button>
+      <button class="tab-btn" data-tab="namavali" role="tab">
+        🌸 १०८ नामावली
+      </button>
+      <button class="tab-btn" data-tab="jaap" role="tab">
+        📿 जप माला (१०८)
+      </button>
+    </div>
+  </nav>
+
+  <!-- Secondary Toolbar (View Mode, Font Size, Bhavarth Toggle) -->
+  <div class="toolbar-container">
+    <!-- View Modes: Combined, Text-Only, Audio-Only -->
+    <div class="view-mode-selector" title="व्यू मोड चुनें">
+      <button class="view-btn active" data-mode="all">पाठ + ऑडियो</button>
+      <button class="view-btn" data-mode="text-only">केवल पाठ</button>
+      <button class="view-btn" data-mode="audio-only">केवल श्रवण</button>
+    </div>
+
+    <!-- Bhavarth Toggle All Button -->
+    <button id="bhavarthToggleAllBtn" class="bhavarth-toggle-all" title="सभी चौपाइयों का अर्थ देखें">
+      📖 संपूर्ण भावार्थ
+    </button>
+
+    <!-- Font Size Controls (A- / Reset / A+) -->
+    <div class="font-controls" title="अक्षरों का आकार बदलें">
+      <button id="fontDecBtn" class="font-btn" title="छोटा आकार" aria-label="अक्षर छोटे करें">A-</button>
+      <span class="font-label">आकार</span>
+      <button id="fontResetBtn" class="font-btn" title="सामान्य आकार" aria-label="सामान्य आकार">A</button>
+      <button id="fontIncBtn" class="font-btn" title="बड़ा आकार" aria-label="अक्षर बड़े करें">A+</button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- 1. Shri Hanuman Chalisa Section (Default Active) -->
+    <section id="section-chalisa" class="stotra-section active" role="tabpanel">
+      <!-- Dynamic JS will populate dohas and 40 chaupais -->
+    </section>
+
+    <!-- 2. Shri Bajrang Baan Section -->
+    <section id="section-bajrang-baan" class="stotra-section" role="tabpanel">
+      <!-- Dynamic JS will populate Bajrang Baan -->
+    </section>
+
+    <!-- 3. Sankat Mochan Hanumanashtak Section -->
+    <section id="section-ashtak" class="stotra-section" role="tabpanel">
+      <!-- Dynamic JS will populate Ashtak -->
+    </section>
+
+    <!-- 4. Shri Hanuman Aarti Section -->
+    <section id="section-aarti" class="stotra-section" role="tabpanel">
+      <!-- Dynamic JS will populate Aarti -->
+    </section>
+
+    <!-- 5. 108 Holy Names Section -->
+    <section id="section-namavali" class="stotra-section" role="tabpanel">
+      <!-- Dynamic JS will populate 108 Namavali -->
+    </section>
+
+    <!-- 6. Digital Jaap Counter Section (108 Beads) -->
+    <section id="section-jaap" class="stotra-section" role="tabpanel">
+      <div class="jaap-container">
+        <div class="jaap-header">
+          <h2 class="jaap-title">डिजिटल राम-नाम एवं हनुमान जप माला</h2>
+          <p class="jaap-subtext">स्क्रीन पर कहीं भी स्पर्श करें • १०८ मनकों की पूर्ण माला पर मंगल ध्वनि</p>
+        </div>
+
+        <!-- Big Touch Counter Button -->
+        <div id="jaapCounterDisplay" class="jaap-counter-display" role="button" aria-label="मनका जपें">
+          <div id="jaapBigNumber" class="jaap-big-number">0</div>
+          <div class="jaap-target-text">लक्ष्य: १०८ मनके</div>
+          <div class="jaap-tap-hint">स्पर्श करें (Tap Here)</div>
+        </div>
+
+        <!-- Lifetime & Mala Stats -->
+        <div class="jaap-stats">
+          <div class="stat-item">
+            <div id="jaapStatMala" class="stat-val">0</div>
+            <div class="stat-label">पूर्ण मालाएं</div>
+          </div>
+          <div class="stat-item">
+            <div id="jaapStatLifetime" class="stat-val">0</div>
+            <div class="stat-label">कुल संचित जप</div>
+          </div>
+        </div>
+
+        <!-- Jaap Reset Controls -->
+        <div class="jaap-controls">
+          <button id="jaapResetBtn" class="btn-secondary">
+            🔄 काउंटर रीसेट करें
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-quote">
+      ॥ पवनतनय संकट हरन, मंगल मूरति रूप ॥
+    </div>
+    <p>श्री हनुमान चालीसा एवं सम्पूर्ण स्तोत्र संग्रह • 100% ऑफ़लाइन PWA</p>
+    <p style="margin-top: 4px; font-size: 0.75rem;">शुद्ध देवनागरी पाठ • बिना किसी बाहरी डेटाबेस या विज्ञापन के</p>
+  </footer>
+
+  <!-- Floating Audio Player Dock (Fixed Bottom Console) -->
+  <div id="audioPlayerDock" class="audio-player-dock" aria-label="ऑडियो प्लेयर">
+    <!-- Collapse/Expand handle -->
+    <div id="dockCollapseBar" class="dock-collapse-bar" title="प्लेयर छिपाएं/दिखाएं">
+      <span class="dock-collapse-handle"></span>
+    </div>
+
+    <!-- Hidden Native HTML5 Audio Tag -->
+    <audio id="mainAudioPlayer" preload="metadata"></audio>
+
+    <div class="player-inner">
+      <!-- Track Title & Spectrum Animation -->
+      <div class="player-top-row">
+        <div class="audio-track-info">
+          <span class="track-icon">🎵</span>
+          <span id="audioTrackName">श्री हनुमान चालीसा (दिव्य शांति धुन)</span>
+          <span id="audioSourceChip" class="chip-btn" style="font-size: 0.7rem; pointer-events: none;">इनबिल्ट</span>
+        </div>
+
+        <!-- Audio Spectrum Bars -->
+        <div id="audioSpectrum" class="spectrum-bars" title="ऑडियो विज़ुअलाइज़र">
+          <div class="spectrum-bar"></div>
+          <div class="spectrum-bar"></div>
+          <div class="spectrum-bar"></div>
+          <div class="spectrum-bar"></div>
+          <div class="spectrum-bar"></div>
+        </div>
+      </div>
+
+      <!-- Seek Bar & Current/Total Timestamps -->
+      <div class="player-progress-container">
+        <span id="currentTimeLabel" class="time-stamp">00:00</span>
+        <input type="range" id="seekSlider" class="seek-slider" min="0" max="100" value="0" aria-label="सीक बार">
+        <span id="totalDurationLabel" class="time-stamp">03:00</span>
+      </div>
+
+      <!-- Controls Row: Play/Pause, Speed, Repeat, Auto-Scroll, Local File Picker, Volume -->
+      <div class="player-controls-row">
+        <!-- Main Play/Pause and Seek Buttons -->
+        <div class="main-audio-btns">
+          <button id="btnPlayMaster" class="btn-play-master" title="बजाएं (Play)" aria-label="बजाएं">
+            ▶
+          </button>
+          <!-- Playback Speed -->
+          <button id="btnSpeed" class="chip-btn" title="प्लेबैक गति (Speed)" aria-label="प्लेबैक गति">
+            1.0x
+          </button>
+          <!-- Repeat / Loop Mode -->
+          <button id="btnRepeat" class="chip-btn" title="दोहराएं / लूप (Repeat)" aria-label="लूप चालू/बंद">
+            🔁 लूप
+          </button>
+          <!-- Auto Scroll Toggle -->
+          <button id="btnAutoScroll" class="chip-btn active" title="चौपाई के साथ ऑटो-स्क्रॉल" aria-label="ऑटो स्क्रॉल">
+            📜 ऑटो-स्क्रॉल
+          </button>
+        </div>
+
+        <!-- Secondary Controls: Custom Audio Picker & Volume -->
+        <div class="secondary-audio-controls">
+          <!-- Choose Local MP3 File -->
+          <button id="btnChooseAudio" class="chip-btn" title="अपने फोन से पसंदीदा MP3 चुनें">
+            📁 अपनी MP3 चुनें
+          </button>
+          <input type="file" id="customAudioInput" accept="audio/*">
+
+          <!-- Volume / Mute Controls -->
+          <div class="volume-wrapper">
+            <button id="btnMute" class="btn-ctrl" title="म्यूट करें" aria-label="म्यूट">
+              🔊
+            </button>
+            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="वॉल्यूम">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookmarks Modal Overlay -->
+  <div id="modalOverlay" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">पसंदीदा चौपाइयाँ</h3>
+        <button id="modalCloseBtn" class="modal-close-btn" aria-label="बंद करें">&times;</button>
+      </div>
+      <div id="modalBody">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Toast Feedback -->
+  <div id="toastMsg" class="toast-msg" role="status" aria-live="polite"></div>
+
+  <!-- Main JavaScript Application Engine -->
+  <script src="app.js"></script>
+</body>
+</html>

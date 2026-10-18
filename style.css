@@ -1,0 +1,1335 @@
+/* ==========================================================================
+   श्री हनुमान चालीसा एवं सम्पूर्ण स्तोत्र संग्रह - STYLESHEET
+   Pure CSS3 - Devotional Saffron & Royal Gold Theme (Light & Dark)
+   ========================================================================== */
+
+:root {
+  /* Divine Color Palette */
+  --saffron-primary: #E65100;
+  --saffron-light: #FF9800;
+  --saffron-glow: rgba(230, 81, 0, 0.25);
+  --saffron-subtle: #FFF3E0;
+  --gold: #D4AF37;
+  --gold-bright: #FFD700;
+  --gold-glow: rgba(255, 215, 0, 0.4);
+  --maroon: #800000;
+  --maroon-dark: #4A0000;
+
+  /* Theme Defaults (Light / Devotional Saffron Mode) */
+  --bg-page: #FFFDF9;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #FFFBF5;
+  --border-card: #F3E5D8;
+  --text-primary: #2C1810;
+  --text-secondary: #6B4C3E;
+  --text-muted: #9E7D6D;
+  --player-bg: rgba(255, 253, 249, 0.96);
+  --header-bg: linear-gradient(135deg, #7A1F00 0%, #D84315 45%, #FF6F00 100%);
+  --shadow-sm: 0 2px 8px rgba(139, 69, 19, 0.08);
+  --shadow-md: 0 6px 20px rgba(139, 69, 19, 0.12);
+  --shadow-glow: 0 0 20px rgba(255, 152, 0, 0.3);
+
+  /* Typography */
+  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Nirmala UI", "Mangal", "Kohinoor Devanagari", "Devanagari Sangam MN", sans-serif;
+  --font-scale: 1rem;
+  --line-height-text: 1.85;
+
+  /* Layout */
+  --container-max: 860px;
+  --player-height: 110px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================= Dark Mode (Celestial Night / रात्रि भक्ति) ================= */
+[data-theme="dark"] {
+  --bg-page: #100A05;
+  --bg-card: #1A110A;
+  --bg-card-alt: #23170E;
+  --border-card: #382417;
+  --text-primary: #F7EDE2;
+  --text-secondary: #D4BBA5;
+  --text-muted: #9C8271;
+  --saffron-subtle: #2A170A;
+  --player-bg: rgba(26, 17, 10, 0.96);
+  --header-bg: linear-gradient(135deg, #240B00 0%, #5D1B00 50%, #8A2B00 100%);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px rgba(255, 174, 66, 0.35);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-family: var(--font-stack);
+  font-size: 16px;
+  scroll-behavior: smooth;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-color: var(--bg-page);
+  transition: background-color var(--transition), color var(--transition);
+  padding-bottom: calc(var(--player-height) + 40px);
+}
+
+/* Reading Progress Bar (Top) */
+#readingProgressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background: linear-gradient(90deg, #FFD700, #FF6F00, #D84315);
+  z-index: 1000;
+  transition: width 0.1s linear;
+  box-shadow: 0 1px 6px rgba(255, 111, 0, 0.5);
+}
+
+/* ================= Header & Divine Hero ================= */
+.site-header {
+  background: var(--header-bg);
+  color: #FFFDF9;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border-bottom: 3px solid var(--gold);
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 20%, rgba(255, 215, 0, 0.22), transparent 75%);
+  pointer-events: none;
+}
+
+.header-topbar {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-symbol {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700, #FF6F00);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  border: 2px solid #FFF3E0;
+  flex-shrink: 0;
+}
+
+.brand-symbol img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.brand-titles h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.brand-titles .subtitle {
+  font-size: 0.78rem;
+  color: #FFE0B2;
+  font-weight: 500;
+}
+
+/* Header Action Controls */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFDF9;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+  border-color: var(--gold-bright);
+}
+
+.icon-btn:active {
+  transform: translateY(0);
+}
+
+/* Hero Section */
+.hero-devotional {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 16px 16px 24px;
+  text-align: center;
+  position: relative;
+}
+
+.divine-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.diya-icon {
+  width: 14px;
+  height: 14px;
+  animation: diya-flicker 2s infinite ease-in-out;
+}
+
+@keyframes diya-flicker {
+  0%, 100% { opacity: 0.85; transform: scale(1); filter: drop-shadow(0 0 2px #FFD700); }
+  50% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 6px #FF8C00); }
+}
+
+.hero-quote {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #FFF9E6;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  font-style: italic;
+}
+
+.hero-subquote {
+  font-size: 0.88rem;
+  color: #FFCCBC;
+}
+
+/* ================= Navigation Tabs (Sangrah Navigation) ================= */
+.sangrah-nav-container {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition);
+}
+
+.sangrah-tabs {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sangrah-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.tab-btn:hover {
+  border-color: var(--saffron-primary);
+  color: var(--saffron-primary);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--saffron-primary), #D84315);
+  color: #FFFFFF;
+  border-color: transparent;
+  box-shadow: 0 2px 8px var(--saffron-glow);
+}
+
+/* ================= Secondary Control Toolbar ================= */
+.toolbar-container {
+  max-width: var(--container-max);
+  margin: 12px auto 6px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.view-mode-selector {
+  display: flex;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 2px;
+}
+
+.view-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.view-btn.active {
+  background: var(--saffron-primary);
+  color: #FFFFFF;
+}
+
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-pill);
+  padding: 3px 8px;
+}
+
+.font-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.font-btn:hover {
+  background: var(--saffron-subtle);
+  color: var(--saffron-primary);
+}
+
+.font-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Bhavarth Toggle Button */
+.bhavarth-toggle-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.bhavarth-toggle-all.active {
+  background: var(--saffron-subtle);
+  color: var(--saffron-primary);
+  border-color: var(--saffron-primary);
+}
+
+/* ================= Main Content Container ================= */
+.main-content {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 12px 16px;
+  width: 100%;
+  flex: 1;
+}
+
+/* Stotra Container */
+.stotra-section {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.stotra-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section Header Card */
+.stotra-heading-card {
+  text-align: center;
+  padding: 20px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.stotra-heading-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--saffron-primary), var(--gold));
+}
+
+.stotra-title {
+  font-size: 1.55rem;
+  color: var(--saffron-primary);
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.stotra-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ================= Verse / Chaupai Cards ================= */
+.verse-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: var(--transition);
+}
+
+.verse-card.doha-card {
+  background: var(--bg-card-alt);
+  border-left: 4px solid var(--saffron-primary);
+  border-right: 4px solid var(--saffron-primary);
+}
+
+.verse-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold);
+}
+
+/* Active Highlight during Audio Playback (Karaoke Glow) */
+.verse-card.active-playback {
+  border: 2px solid var(--gold-bright);
+  background: var(--saffron-subtle);
+  box-shadow: var(--shadow-glow);
+  transform: scale(1.015);
+  transition: var(--transition);
+}
+
+.verse-card.active-playback::before {
+  content: "▶";
+  position: absolute;
+  left: 8px;
+  top: 14px;
+  font-size: 0.75rem;
+  color: var(--saffron-primary);
+  animation: pulse-icon 1s infinite alternate;
+}
+
+@keyframes pulse-icon {
+  from { transform: scale(0.9); opacity: 0.7; }
+  to { transform: scale(1.2); opacity: 1; }
+}
+
+.verse-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border-card);
+}
+
+.verse-badge {
+  display: inline-block;
+  background: var(--saffron-subtle);
+  color: var(--saffron-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(230, 81, 0, 0.2);
+}
+
+.verse-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verse-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.verse-action-btn:hover {
+  color: var(--saffron-primary);
+  background: var(--saffron-subtle);
+}
+
+.verse-action-btn.bookmarked {
+  color: #E53935;
+}
+
+/* Sacred Text Typography */
+.verse-text {
+  font-size: calc(var(--font-scale) * 1.15);
+  line-height: var(--line-height-text);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+  margin: 10px 0;
+  letter-spacing: 0.3px;
+}
+
+.verse-text.doha-text {
+  font-size: calc(var(--font-scale) * 1.22);
+  color: var(--maroon);
+}
+
+[data-theme="dark"] .verse-text.doha-text {
+  color: #FFA726;
+}
+
+/* Bhavarth (Hindi Meaning) Drawer */
+.verse-bhavarth {
+  display: none;
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--bg-card-alt);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--gold);
+  font-size: calc(var(--font-scale) * 0.92);
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.verse-bhavarth.visible {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+.bhavarth-label {
+  font-weight: 700;
+  color: var(--saffron-primary);
+  margin-right: 6px;
+  font-size: 0.85rem;
+}
+
+/* ================= 108 Divine Names Grid ================= */
+.names-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.name-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.name-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.name-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--saffron-subtle);
+  color: var(--saffron-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(230, 81, 0, 0.2);
+}
+
+.name-mantra {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ================= Digital Jaap Counter (जप माला) ================= */
+.jaap-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  max-width: 480px;
+  margin: 0 auto 24px;
+}
+
+.jaap-header {
+  margin-bottom: 24px;
+}
+
+.jaap-title {
+  font-size: 1.4rem;
+  color: var(--saffron-primary);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.jaap-subtext {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.jaap-counter-display {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--bg-card-alt), var(--bg-card));
+  border: 6px solid var(--gold);
+  margin: 0 auto 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-glow), inset 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease, border-color 0.2s ease;
+  position: relative;
+}
+
+.jaap-counter-display:active {
+  transform: scale(0.95);
+  border-color: var(--saffron-primary);
+}
+
+.jaap-big-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--saffron-primary);
+  line-height: 1;
+}
+
+.jaap-target-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.jaap-tap-hint {
+  font-size: 0.75rem;
+  color: var(--gold);
+  margin-top: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.jaap-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  min-width: 110px;
+}
+
+.stat-val {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.jaap-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-secondary {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--saffron-primary);
+  color: var(--saffron-primary);
+}
+
+/* ================= Audio Player Dock (Floating Bottom Console) ================= */
+.audio-player-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--player-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 2px solid var(--gold);
+  box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.15);
+  z-index: 500;
+  transition: transform var(--transition), background-color var(--transition);
+}
+
+.audio-player-dock.collapsed {
+  transform: translateY(calc(100% - 32px));
+}
+
+.dock-collapse-bar {
+  text-align: center;
+  padding: 4px;
+  cursor: pointer;
+  background: var(--bg-card-alt);
+  border-bottom: 1px solid var(--border-card);
+}
+
+.dock-collapse-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--text-muted);
+  border-radius: var(--radius-pill);
+  display: inline-block;
+}
+
+.player-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 10px 16px 14px;
+}
+
+/* Audio Source Indicator & Spectrum */
+.player-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+}
+
+.audio-track-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-icon {
+  color: var(--saffron-primary);
+}
+
+/* Audio Spectrum Visualizer */
+.spectrum-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.spectrum-bar {
+  width: 3px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 1px;
+  transition: height 0.15s ease;
+}
+
+.playing .spectrum-bar:nth-child(1) { animation: bounce 0.6s infinite alternate ease-in-out; }
+.playing .spectrum-bar:nth-child(2) { animation: bounce 0.8s infinite 0.2s alternate ease-in-out; }
+.playing .spectrum-bar:nth-child(3) { animation: bounce 0.5s infinite 0.1s alternate ease-in-out; }
+.playing .spectrum-bar:nth-child(4) { animation: bounce 0.7s infinite 0.3s alternate ease-in-out; }
+.playing .spectrum-bar:nth-child(5) { animation: bounce 0.9s infinite 0.15s alternate ease-in-out; }
+
+@keyframes bounce {
+  0% { height: 4px; background: var(--gold); }
+  100% { height: 16px; background: var(--saffron-primary); }
+}
+
+/* Progress Slider & Timestamps */
+.player-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.time-stamp {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 36px;
+}
+
+.seek-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--border-card);
+  outline: none;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.seek-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--saffron-primary);
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.seek-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+/* Player Button Controls Row */
+.player-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.main-audio-btns {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-ctrl {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-ctrl:hover {
+  color: var(--saffron-primary);
+  transform: scale(1.1);
+}
+
+.btn-play-master {
+  width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, var(--saffron-primary), #D84315);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 3px 12px var(--saffron-glow);
+  transition: var(--transition);
+}
+
+.btn-play-master:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px var(--saffron-glow);
+}
+
+.btn-play-master:active {
+  transform: scale(0.96);
+}
+
+/* Secondary Audio Controls */
+.secondary-audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chip-btn {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.chip-btn.active {
+  background: var(--saffron-primary);
+  color: #FFFFFF;
+  border-color: transparent;
+}
+
+.volume-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.volume-slider {
+  width: 70px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--border-card);
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--saffron-primary);
+  cursor: pointer;
+}
+
+/* Custom Local Audio Input Hidden */
+#customAudioInput {
+  display: none;
+}
+
+/* ================= View Mode Overrides ================= */
+body.mode-text-only .audio-player-dock {
+  transform: translateY(100%);
+}
+
+body.mode-text-only {
+  padding-bottom: 40px;
+}
+
+body.mode-audio-only .verse-bhavarth {
+  display: none !important;
+}
+
+/* ================= Toast Notification ================= */
+.toast-msg {
+  position: fixed;
+  bottom: calc(var(--player-height) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #212121;
+  color: #FFFDF9;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  z-index: 2000;
+  border: 1px solid var(--gold);
+}
+
+.toast-msg.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ================= Modal / Drawer ================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  padding: 16px;
+}
+
+.modal-overlay.open {
+  display: flex;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.modal-header h3 {
+  font-size: 1.2rem;
+  color: var(--saffron-primary);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+/* ================= Footer ================= */
+.site-footer {
+  text-align: center;
+  padding: 24px 16px;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--border-card);
+}
+
+.footer-quote {
+  font-size: 0.95rem;
+  color: var(--saffron-primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* ================= Responsive Queries ================= */
+/* ================= Responsive Queries & Mobile Polish ================= */
+@media (max-width: 768px) {
+  :root {
+    --player-height: 130px;
+  }
+
+  body {
+    padding-bottom: calc(var(--player-height) + 50px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .audio-player-dock {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .main-content {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --player-height: 145px;
+  }
+
+  .header-topbar {
+    padding: 10px 12px;
+  }
+
+  .brand-symbol {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-titles h1 {
+    font-size: 1.08rem;
+  }
+
+  .brand-titles .subtitle {
+    font-size: 0.72rem;
+  }
+
+  .hero-devotional {
+    padding: 12px 12px 18px;
+  }
+
+  .hero-quote {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .hero-subquote {
+    font-size: 0.8rem;
+  }
+
+  /* Smooth touch scrolling for horizontal tabs on iOS & Android */
+  .sangrah-tabs {
+    padding: 6px 8px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    font-size: 0.82rem;
+    padding: 7px 13px;
+    min-height: 38px;
+  }
+
+  /* Toolbar adjustment */
+  .toolbar-container {
+    justify-content: center;
+    gap: 8px;
+    margin: 8px auto;
+    padding: 0 8px;
+  }
+
+  .view-mode-selector {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .view-btn {
+    flex: 1;
+    text-align: center;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  /* Verse cards & touch targets */
+  .verse-card {
+    padding: 14px 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .verse-text {
+    font-size: calc(var(--font-scale) * 1.08);
+    line-height: 1.8;
+  }
+
+  .verse-actions .verse-action-btn {
+    min-width: 34px;
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  /* Player Dock on Mobile */
+  .player-inner {
+    padding: 6px 12px 8px;
+  }
+
+  .player-top-row {
+    margin-bottom: 4px;
+  }
+
+  .audio-track-info {
+    font-size: 0.78rem;
+    max-width: 75%;
+  }
+
+  .player-controls-row {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .main-audio-btns {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-play-master {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+
+  .chip-btn {
+    padding: 5px 9px;
+    font-size: 0.72rem;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .volume-wrapper {
+    display: none; /* Native phone volume buttons are used on mobile */
+  }
+
+  .secondary-audio-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Jaap Counter */
+  .jaap-container {
+    padding: 20px 14px;
+  }
+
+  .jaap-counter-display {
+    width: 170px;
+    height: 170px;
+  }
+
+  .jaap-big-number {
+    font-size: 3.2rem;
+  }
+
+  .jaap-stats {
+    gap: 14px;
+  }
+
+  .stat-item {
+    min-width: 95px;
+    padding: 8px 12px;
+  }
+
+  .stat-val {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-titles h1 {
+    font-size: 0.98rem;
+  }
+  .brand-titles .subtitle {
+    display: none; /* Keep header clean on ultra-narrow phones */
+  }
+  .verse-text {
+    font-size: calc(var(--font-scale) * 1rem);
+  }
+  .jaap-counter-display {
+    width: 150px;
+    height: 150px;
+  }
+  .jaap-big-number {
+    font-size: 2.8rem;
+  }
+}
+
