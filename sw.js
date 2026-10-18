@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hanuman-chalisa-v1.0.0';
+const CACHE_NAME = 'hanuman-chalisa-v1.1.0';
 
 const ASSETS_TO_CACHE = [
   './',
@@ -10,14 +10,16 @@ const ASSETS_TO_CACHE = [
   './sitemap.xml',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
-  './assets/icons/hanuman-icon.png'
+  './assets/icons/hanuman-icon.png',
+  './assets/images/hanuman-hero.jpg',
+  './assets/audio/hanuman-chalisa-ambient.wav' // <-- यही इनबिल्ट ऑडियो फ़ाइल को ऑफ़लाइन कैशे करता है
 ];
 
-// Install event - Cache static assets
+// 1. Install Event - सभी फ़ाइलों और ऑडियो को फ़ोन की मेमोरी में सहेजना
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Caching app shell & sacred texts');
+      console.log('[Service Worker] Caching app shell, audio & sacred texts');
       return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
         console.warn('[Service Worker] Pre-cache partial failure:', err);
       });
@@ -25,7 +27,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate event - Clean up old caches
+// 2. Activate Event - पुराने कैशे को साफ़ करना
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -41,18 +43,16 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - Cache-first, fallback to network
+// 3. Fetch Event - इंटरनेट बंद होने पर सीधे फ़ोन की कैशे मेमोरी से ऑडियो व पेज देना
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        return cachedResponse;
+        return cachedResponse; // ऑफ़लाइन है तो सीधे यहीं से ऑडियो बजेगा
       }
       return fetch(event.request).then((networkResponse) => {
-        // Cache valid responses for offline use
         if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -61,7 +61,6 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // Fallback for navigation requests when offline
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
