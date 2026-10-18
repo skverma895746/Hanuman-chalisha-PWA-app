@@ -959,14 +959,14 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '⏸️';
+      dom.btnPlayMaster.innerHTML = '❚❚';
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
 
     audio.addEventListener('pause', () => {
       state.isPlaying = false;
-      dom.btnPlayMaster.innerHTML = '▶️';
+      dom.btnPlayMaster.innerHTML = '▶︎';
       dom.btnPlayMaster.title = 'बजाएं (Play)';
       dom.audioSpectrum.classList.remove('playing');
     });
@@ -999,7 +999,7 @@
     audio.addEventListener('ended', () => {
       if (!state.isLooping) {
         state.isPlaying = false;
-        dom.btnPlayMaster.innerHTML = '▶️';
+        dom.btnPlayMaster.innerHTML = '▶︎';
         dom.audioSpectrum.classList.remove('playing');
         clearHighlights();
       }
