@@ -45,26 +45,103 @@ self.addEventListener('activate', (event) => {
 
 // 3. Fetch Event - इंटरनेट बंद होने पर सीधे फ़ोन की कैशे मेमोरी से ऑडियो व पेज देना
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+  const request = event.request;
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse; // ऑफ़लाइन है तो सीधे यहीं से ऑडियो बजेगा
+  if (request.method !== 'GET') return;
+
+  const audioURL = new URL(
+    './assets/audio/hanuman-chalisa-ambient.wav',
+    self.registration.scope
+  ).href;
+
+  // Special handling for cached audio and Range requests
+  if (request.url === audioURL) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(audioURL);
+
+      if (!cached) {
+        return fetch(request);
       }
-      return fetch(event.request).then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return networkResponse;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
+
+      const range = request.headers.get('Range');
+
+      if (!range) {
+        return cached;
+      }
+
+      const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+
+      if (!match) {
+        return new Response(null, {
+          status: 416,
+          headers: {
+            'Content-Range': `bytes */${(await cached.clone().arrayBuffer()).byteLength}`
+          }
+        });
+      }
+
+      const buffer = await cached.arrayBuffer();
+      const total = buffer.byteLength;
+
+      let start;
+      let end;
+
+      if (match[1] === '') {
+        const suffixLength = Number(match[2]);
+        start = Math.max(0, total - suffixLength);
+        end = total - 1;
+      } else {
+        start = Number(match[1]);
+        end = match[2] ? Math.min(Number(match[2]), total - 1) : total - 1;
+      }
+
+      if (start >= total || start > end) {
+        return new Response(null, {
+          status: 416,
+          headers: { 'Content-Range': `bytes */${total}` }
+        });
+      }
+
+      const chunk = buffer.slice(start, end + 1);
+
+      return new Response(chunk, {
+        status: 206,
+        statusText: 'Partial Content',
+        headers: {
+          'Content-Type': cached.headers.get('Content-Type') || 'audio/wav',
+          'Accept-Ranges': 'bytes',
+          'Content-Range': `bytes ${start}-${end}/${total}`,
+          'Content-Length': String(chunk.byteLength)
         }
       });
-    })
-  );
+    })());
+
+    return;
+  }
+
+  // Normal cache-first strategy for other assets
+  event.respondWith((async () => {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(request);
+
+      if (response.ok && response.type === 'basic') {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+      }
+
+      return response;
+    } catch (error) {
+      if (request.mode === 'navigate') {
+        return (await caches.match(
+          new URL('./index.html', self.registration.scope).href
+        )) || Response.error();
+      }
+
+      return Response.error();
+    }
+  })());
 });

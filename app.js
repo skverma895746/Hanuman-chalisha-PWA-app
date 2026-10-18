@@ -1000,9 +1000,42 @@
       }
     });
 
-    audio.addEventListener('error', (e) => {
-      console.warn('Audio playback error:', e);
-      showToast('ऑडियो उपलब्ध नहीं है। कृपया अपनी MP3 चुनें।');
+       // ऑडियो की त्रुटि पहचानें और कारण हिंदी में दिखाएँ
+    audio.addEventListener('error', () => {
+      const error = audio.error;
+      let message = 'ऑडियो चलाने में समस्या आ गई।';
+
+      if (error) {
+        switch (error.code) {
+          case MediaError.MEDIA_ERR_ABORTED:
+            message = 'ऑडियो चलना रोक दिया गया। दोबारा प्रयास करें।';
+            break;
+
+          case MediaError.MEDIA_ERR_NETWORK:
+            message = navigator.onLine
+              ? 'ऑडियो लोड नहीं हो पाया। कुछ देर बाद दोबारा प्रयास करें।'
+              : 'इंटरनेट उपलब्ध नहीं है। ऑफलाइन ऑडियो की उपलब्धता जाँचें।';
+            break;
+
+          case MediaError.MEDIA_ERR_DECODE:
+            message = 'ऑडियो फ़ाइल पढ़ने में समस्या आ रही है।';
+            break;
+
+          case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            message = 'ऑडियो फ़ाइल नहीं मिली या यह चलने योग्य नहीं है।';
+            break;
+        }
+      }
+
+      console.error('ऑडियो त्रुटि:', {
+        code: error ? error.code : null,
+        source: audio.currentSrc,
+        online: navigator.onLine,
+        networkState: audio.networkState,
+        readyState: audio.readyState
+      });
+
+      showToast(message, '⚠️', 8000);
     });
 
     // Seek Slider Event
