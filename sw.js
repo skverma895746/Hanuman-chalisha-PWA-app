@@ -1,67 +1,91 @@
-const CACHE_NAME = 'hanuman-chalisa-v1.1.0';
 
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'hanuman-chalisa-v1.2.0';
+
+const CORE_ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
   './manifest.json',
+  './assets/audio/hanuman-chalisa-ambient.wav'
+];
+
+const OPTIONAL_ASSETS = [
   './robots.txt',
   './sitemap.xml',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/hanuman-icon.png',
-  './assets/images/hanuman-hero.jpg',
-  './assets/audio/hanuman-chalisa-ambient.wav' // <-- यही इनबिल्ट ऑडियो फ़ाइल को ऑफ़लाइन कैशे करता है
+  './assets/images/hanuman-hero.jpg'
 ];
 
-// 1. Install Event - सभी फ़ाइलों और ऑडियो को फ़ोन की मेमोरी में सहेजना
+const AUDIO_URL = new URL(
+  './assets/audio/hanuman-chalisa-ambient.wav',
+  self.registration.scope
+).href;
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Caching app shell, audio & sacred texts');
-      return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
-        console.warn('[Service Worker] Pre-cache partial failure:', err);
-      });
-    }).then(() => self.skipWaiting())
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+
+    // App aur audio cache hona zaroori hai.
+    // Audio cache nahi hua to installation fail hogi.
+    await cache.addAll(CORE_ASSETS);
+
+    // Optional files fail hone par app installation na rokein.
+    await Promise.all(
+      OPTIONAL_ASSETS.map(async (url) => {
+        try {
+          await cache.add(url);
+        } catch (error) {
+          console.warn('Optional asset cache nahi hua:', url, error);
+        }
+      })
+    );
+
+    await self.skipWaiting();
+  })());
 });
 
-// 2. Activate Event - पुराने कैशे को साफ़ करना
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[Service Worker] Clearing old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+
+    await Promise.all(
+      keys
+        .filter((key) => key !== CACHE_NAME)
+        .map((key) => caches.delete(key))
+    );
+
+    await self.clients.claim();
+  })());
 });
 
-// 3. Fetch Event - इंटरनेट बंद होने पर सीधे फ़ोन की कैशे मेमोरी से ऑडियो व पेज देना
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
   if (request.method !== 'GET') return;
 
-  const audioURL = new URL(
-    './assets/audio/hanuman-chalisa-ambient.wav',
-    self.registration.scope
-  ).href;
+  const requestURL = new URL(request.url);
 
-  // Special handling for cached audio and Range requests
-  if (request.url === audioURL) {
+  // Audio: cached file se normal aur Range playback.
+  if (
+    requestURL.origin === new URL(AUDIO_URL).origin &&
+    requestURL.pathname === new URL(AUDIO_URL).pathname
+  ) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(audioURL);
+      const cached = await cache.match(AUDIO_URL);
 
       if (!cached) {
-        return fetch(request);
+        try {
+          return await fetch(request);
+        } catch {
+          return new Response('Audio offline cache mein nahi mila.', {
+            status: 503,
+            headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+          });
+        }
       }
 
       const range = request.headers.get('Range');
@@ -72,11 +96,12 @@ self.addEventListener('fetch', (event) => {
 
       const match = /^bytes=(\d*)-(\d*)$/.exec(range);
 
-      if (!match) {
+      if (!match || (!match[1] && !match[2])) {
         return new Response(null, {
           status: 416,
           headers: {
-            'Content-Range': `bytes */${(await cached.clone().arrayBuffer()).byteLength}`
+            'Content-Range': `bytes */${cached.headers.get('Content-Length') || '*'}`,
+            'Accept-Ranges': 'bytes'
           }
         });
       }
@@ -96,10 +121,19 @@ self.addEventListener('fetch', (event) => {
         end = match[2] ? Math.min(Number(match[2]), total - 1) : total - 1;
       }
 
-      if (start >= total || start > end) {
+      if (
+        !Number.isSafeInteger(start) ||
+        !Number.isSafeInteger(end) ||
+        start < 0 ||
+        start >= total ||
+        start > end
+      ) {
         return new Response(null, {
           status: 416,
-          headers: { 'Content-Range': `bytes */${total}` }
+          headers: {
+            'Content-Range': `bytes */${total}`,
+            'Accept-Ranges': 'bytes'
+          }
         });
       }
 
@@ -107,7 +141,6 @@ self.addEventListener('fetch', (event) => {
 
       return new Response(chunk, {
         status: 206,
-        statusText: 'Partial Content',
         headers: {
           'Content-Type': cached.headers.get('Content-Type') || 'audio/wav',
           'Accept-Ranges': 'bytes',
@@ -120,25 +153,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Normal cache-first strategy for other assets
+  // Baaki files: cache first, phir network.
   event.respondWith((async () => {
     const cached = await caches.match(request);
+
     if (cached) return cached;
 
     try {
       const response = await fetch(request);
 
-      if (response.ok && response.type === 'basic') {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+      if (response.ok && response.status === 200 && response.type === 'basic') {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(request, response.clone());
       }
 
       return response;
     } catch (error) {
       if (request.mode === 'navigate') {
-        return (await caches.match(
-          new URL('./index.html', self.registration.scope).href
-        )) || Response.error();
+        return (
+          await caches.match(
+            new URL('./index.html', self.registration.scope).href
+          )
+        ) || Response.error();
       }
 
       return Response.error();
