@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hanuman-chalisa-v1.3.0';
+const CACHE_NAME = 'hanuman-chalisa-v1.4.0';
 
 const CORE_ASSETS = [
   './',
@@ -18,6 +18,9 @@ const OPTIONAL_ASSETS = [
   './assets/images/hanuman-hero.jpg'
 ];
 
+const UA = (self.navigator && self.navigator.userAgent) || '';
+const IS_CHROMIUM = /Chrom(e|ium)\//.test(UA) && !/CriOS|EdgiOS|FxiOS/.test(UA);
+
 const AUDIO_URL = new URL(
   './assets/audio/hanuman-chalisa-ambient.wav',
   self.registration.scope
@@ -29,7 +32,10 @@ self.addEventListener('install', (event) => {
 
     // App aur audio cache hona zaroori hai.
     // Audio cache nahi hua to installation fail hogi.
-    await cache.addAll(CORE_ASSETS);
+    // App files hamesha network se taaza (HTTP cache ko bypass); badi audio file normal.
+    await cache.addAll(
+      CORE_ASSETS.map((url) => (url.endsWith('.wav') ? url : new Request(url, { cache: 'reload' })))
+    );
 
     // Optional files fail hone par app installation na rokein.
     await Promise.all(
@@ -89,7 +95,11 @@ self.addEventListener('fetch', (event) => {
 
       const range = request.headers.get('Range');
 
-      if (!range) {
+      // Chrome/Edge/Android (Chromium) me SW ka banaya hua 206 response audio ko
+      // "data source error" se rok deta hai (test me confirm). Wahan cached poori file
+      // seedha dein: play, seek aur offline teeno theek chalte hain.
+      // Safari/Firefox ko 206 chahiye, isliye unke liye neeche wala Range code wahi rahega.
+      if (!range || IS_CHROMIUM) {
         return cached;
       }
 

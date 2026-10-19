@@ -608,7 +608,7 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
 /* Sacred Text Typography */
 .verse-text {
   font-size: calc(var(--font-scale) * 1.15);
-  line-height: var(--line-height-text);
+  line-height: calc(var(--line-height-text) * var(--lh-mult, 1));
   color: var(--text-primary);
   font-weight: 600;
   text-align: center;
@@ -773,8 +773,16 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
 .jaap-stats {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 20px;
+}
+
+.jaap-stats .stat-item {
+  flex: 1 1 96px;
+  min-width: 96px;
+  max-width: 140px;
+  padding: 10px 12px;
 }
 
 .stat-item {
@@ -800,7 +808,8 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
 .jaap-controls {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .btn-secondary {
@@ -997,7 +1006,7 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
 .btn-play-master {
   width: 46px;
   height: 46px;
-  background: linear-gradient(135deg, var(--saffron-primary), #FF8F00);
+  background: linear-gradient(135deg, var(--saffron-primary), #D84315);
   color: #FFFFFF;
   border: none;
   border-radius: 50%;
@@ -1358,7 +1367,7 @@ body.mode-audio-only .verse-bhavarth {
 
   .verse-text {
     font-size: calc(var(--font-scale) * 1.08);
-    line-height: 1.8;
+    line-height: calc(1.8 * var(--lh-mult, 1));
   }
 
   .verse-actions .verse-action-btn {
@@ -1470,3 +1479,281 @@ body.mode-audio-only .verse-bhavarth {
 
 /* ===== Font scale: sabhi paath (doha, chaupai, bajrang baan, ashtak, aarti, namavali) ek saath badlein ===== */
 .verse-text, .name-mantra, .verse-bhavarth { transition: font-size 0.15s ease; }
+
+
+/* ==========================================================================
+   NEW: Sepia theme, settings, floating widgets, tap-sync, jaap extras
+   ========================================================================== */
+
+/* ---------- Sepia reading theme (आँखों के लिए आरामदायक) ---------- */
+[data-theme="sepia"] {
+  --bg-page: #F3E9D2;
+  --bg-card: #FBF4E2;
+  --bg-card-alt: #F6EBD0;
+  --border-card: #E2D0A8;
+  --text-primary: #3B2A1A;
+  --text-secondary: #5E4630;
+  --text-muted: #8A7355;
+  --saffron-subtle: #F7E8C6;
+  --player-bg: rgba(243, 233, 210, 0.96);
+  --shadow-sm: 0 2px 8px rgba(110, 80, 30, 0.12);
+  --shadow-md: 0 6px 20px rgba(110, 80, 30, 0.18);
+}
+
+/* ---------- Settings panel ---------- */
+.set-section {
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--border-card);
+}
+.set-section:last-child { border-bottom: 0; }
+.set-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--saffron-primary);
+  margin-bottom: 8px;
+}
+.set-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.set-chip { font-size: 0.85rem; padding: 8px 14px; }
+.set-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+/* ---------- "चल रही चौपाई पर जाएँ" floating button ---------- */
+.follow-btn {
+  position: fixed;
+  right: 12px;
+  bottom: calc(var(--dock-h, 110px) + 14px);
+  z-index: 900;
+  background: linear-gradient(135deg, var(--saffron-primary), #FF8F00);
+  color: #fff;
+  border: 1.5px solid var(--gold-bright);
+  border-radius: var(--radius-pill);
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(230, 81, 0, 0.45);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.follow-btn.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ---------- "जहाँ छोड़ा था वहीं से" banner ---------- */
+.resume-banner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--dock-h, 110px) + 16px);
+  transform: translate(-50%, 20px);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 94vw;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius-pill);
+  padding: 8px 10px 8px 16px;
+  font-size: 0.82rem;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.resume-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+.resume-go {
+  background: var(--saffron-primary);
+  color: #fff;
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.resume-close {
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+/* ---------- नया अपडेट banner ---------- */
+.update-banner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 94vw;
+  background: linear-gradient(135deg, #3A180A, #5D1B00);
+  color: #FFFDF9;
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius-pill);
+  padding: 8px 10px 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+.update-go {
+  background: var(--gold-bright);
+  color: #3A180A;
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.update-close {
+  background: transparent;
+  border: 0;
+  color: #FFE0B2;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 6px;
+}
+
+/* ---------- Tap-to-Sync panel ---------- */
+.sync-panel {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  max-width: 540px;
+  margin: 0 auto;
+  bottom: calc(var(--dock-h, 110px) + 10px);
+  z-index: 1200;
+  background: var(--bg-card);
+  border: 2px solid var(--saffron-primary);
+  border-radius: 18px;
+  padding: 12px 14px;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  animation: fadeIn 0.25s ease;
+}
+.sync-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.sync-title { font-weight: 700; color: var(--saffron-primary); }
+.sync-progress {
+  background: var(--saffron-subtle);
+  color: var(--saffron-primary);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.sync-hint { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px; }
+.sync-next { font-size: 1rem; color: var(--text-primary); }
+.sync-line {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sync-tap {
+  width: 100%;
+  margin: 8px 0;
+  padding: 16px 10px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--saffron-primary), #FF8F00);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(230, 81, 0, 0.4);
+  touch-action: manipulation;
+}
+.sync-tap:active { transform: scale(0.98); }
+.sync-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.verse-card.sync-target {
+  outline: 3px dashed var(--saffron-primary);
+  outline-offset: 3px;
+  background: var(--saffron-subtle);
+}
+
+/* ---------- Jaap: progress ring + history ---------- */
+.jaap-counter-display::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: conic-gradient(var(--saffron-primary) var(--jaap-progress, 0%), rgba(212, 175, 55, 0.22) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+  pointer-events: none;
+}
+.jaap-history {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-card);
+}
+.jaap-history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+.jaap-streak { color: var(--saffron-primary); }
+.jaap-history-bars {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  justify-content: center;
+  height: 130px;
+}
+.jh-col {
+  flex: 1;
+  max-width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.jh-val { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+.jh-barwrap { flex: 1; width: 100%; min-height: 0; display: flex; align-items: flex-end; }
+.jh-bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--gold-bright), var(--saffron-primary));
+  border-radius: 6px 6px 3px 3px;
+  opacity: 0.6;
+}
+.jh-col.today .jh-bar { opacity: 1; }
+.jh-col.today .jh-day { color: var(--saffron-primary); font-weight: 800; }
+.jh-day { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .follow-btn, .resume-banner, .sync-panel, .update-banner { transition: none; animation: none; }
+}

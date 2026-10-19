@@ -145,6 +145,10 @@
         <button id="themeToggleBtn" class="icon-btn" title="रात्रि / दिन का रूप" aria-label="थीम बदलें">
           🌙
         </button>
+        <!-- Settings (screen-on, theme, sleep timer, tap-sync, backup) -->
+        <button id="settingsBtn" class="icon-btn" title="सेटिंग्स" aria-label="सेटिंग्स">
+          ⚙️
+        </button>
       </div>
     </div>
 
@@ -262,6 +266,10 @@
             <div id="jaapStatLifetime" class="stat-val">0</div>
             <div class="stat-label">कुल संचित जप</div>
           </div>
+          <div class="stat-item">
+            <div id="jaapStatToday" class="stat-val">0</div>
+            <div class="stat-label">आज का जप</div>
+          </div>
         </div>
 
         <!-- Jaap Reset Controls -->
@@ -269,6 +277,17 @@
           <button id="jaapResetBtn" class="btn-secondary">
             🔄 काउंटर रीसेट करें
           </button>
+          <button id="jaapSoundBtn" class="btn-secondary" type="button">🔔 आवाज़: चालू</button>
+          <button id="jaapVibrateBtn" class="btn-secondary" type="button">📳 कंपन: चालू</button>
+        </div>
+
+        <!-- Pichhle 7 din ka jaap record (sirf is phone me save) -->
+        <div class="jaap-history">
+          <div class="jaap-history-head">
+            <span>📅 पिछले ७ दिन का जप</span>
+            <span id="jaapStreak" class="jaap-streak"></span>
+          </div>
+          <div id="jaapHistory" class="jaap-history-bars"></div>
         </div>
       </div>
     </section>
@@ -325,7 +344,7 @@
         <!-- Main Play/Pause and Seek Buttons -->
         <div class="main-audio-btns">
           <button id="btnPlayMaster" class="btn-play-master" title="बजाएं (Play)" aria-label="बजाएं">
-            ▶︎
+            ▶
           </button>
           <!-- Playback Speed -->
           <button id="btnSpeed" class="chip-btn" title="प्लेबैक गति (Speed)" aria-label="प्लेबैक गति">

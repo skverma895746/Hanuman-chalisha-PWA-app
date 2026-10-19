@@ -572,7 +572,11 @@
     speed: 1.0,
     isLooping: false,
     currentChaupaiNum: null,
-    audioContext: null
+    audioContext: null,
+    keepAwake: localStorage.getItem('agy_hanuman_keep_awake') !== 'off',
+    jaapSound: localStorage.getItem('agy_hanuman_jaap_sound') !== 'off',
+    jaapVibrate: localStorage.getItem('agy_hanuman_jaap_vibrate') !== 'off',
+    lineSpacing: localStorage.getItem('agy_hanuman_line_spacing') || 'normal'
   };
 
   /* ==========================================================================
@@ -700,6 +704,7 @@
               </button>
               <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('${doha.id}')">📋</button>
               <button class="verse-action-btn" title="शेयर करें" onclick="window.hanumanApp.shareVerse('${doha.id}')">↗</button>
+              <button class="verse-action-btn" title="इमेज बनाकर शेयर करें" onclick="window.hanumanApp.shareVerseImage('${doha.id}')">🖼</button>
             </div>
           </div>
           <div class="verse-text doha-text">
@@ -730,6 +735,7 @@
               </button>
               <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('${verseId}')">📋</button>
               <button class="verse-action-btn" title="शेयर करें" onclick="window.hanumanApp.shareVerse('${verseId}')">↗</button>
+              <button class="verse-action-btn" title="इमेज बनाकर शेयर करें" onclick="window.hanumanApp.shareVerseImage('${verseId}')">🖼</button>
             </div>
           </div>
           <div class="verse-text">
@@ -759,6 +765,7 @@
             </button>
             <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('${closing.id}')">📋</button>
             <button class="verse-action-btn" title="शेयर करें" onclick="window.hanumanApp.shareVerse('${closing.id}')">↗</button>
+              <button class="verse-action-btn" title="इमेज बनाकर शेयर करें" onclick="window.hanumanApp.shareVerseImage('${closing.id}')">🖼</button>
           </div>
         </div>
         <div class="verse-text doha-text">
@@ -854,7 +861,7 @@
             <span class="verse-badge">छंद ${v.num}</span>
             <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('${vId}')">📋</button>
           </div>
-          <div class="verse-text" style="text-align: left; line-height: 2;">
+          <div class="verse-text" style="text-align: left; line-height: calc(2 * var(--lh-mult, 1));">
             ${v.lines.join('<br>')}
           </div>
           <div class="verse-bhavarth visible" style="margin-top:10px;">
@@ -896,8 +903,9 @@
           <span class="verse-badge">दीप आरती</span>
           <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('aarti-full')">📋</button>
           <button class="verse-action-btn" title="शेयर करें" onclick="window.hanumanApp.shareVerse('aarti-full')">↗</button>
+              <button class="verse-action-btn" title="इमेज बनाकर शेयर करें" onclick="window.hanumanApp.shareVerseImage('aarti-full')">🖼</button>
         </div>
-        <div class="verse-text" style="line-height: 2.1;">
+        <div class="verse-text" style="line-height: calc(2.1 * var(--lh-mult, 1));">
           ${AARTI_DATA.lines.join('<br>')}
         </div>
         <div class="verse-bhavarth visible" style="margin-top:14px;">
@@ -959,14 +967,14 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '❚❚';
+      dom.btnPlayMaster.innerHTML = '⏸';
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
 
     audio.addEventListener('pause', () => {
       state.isPlaying = false;
-      dom.btnPlayMaster.innerHTML = '▶︎';
+      dom.btnPlayMaster.innerHTML = '▶';
       dom.btnPlayMaster.title = 'बजाएं (Play)';
       dom.audioSpectrum.classList.remove('playing');
     });
@@ -999,7 +1007,7 @@
     audio.addEventListener('ended', () => {
       if (!state.isLooping) {
         state.isPlaying = false;
-        dom.btnPlayMaster.innerHTML = '▶︎';
+        dom.btnPlayMaster.innerHTML = '▶';
         dom.audioSpectrum.classList.remove('playing');
         clearHighlights();
       }
@@ -1158,7 +1166,7 @@
     clearTimeout(userScrollTimeout);
     userScrollTimeout = setTimeout(() => {
       isUserInteractingWithScroll = false;
-    }, 3500); // Resume auto-scroll 3.5s after user stops touching
+    }, 6000); // Resume auto-scroll 6s after user stops touching
   }
 
   function getAudioTimeScale() {
@@ -1170,11 +1178,23 @@
   }
 
   function syncChaupaiHighlight(currentTime) {
+    if (tapSyncActive) return; // टैप-सिंक के दौरान पुरानी हाइलाइट बंद
     let activeCard = null;
     const scale = getAudioTimeScale();
 
+    // अपनी MP3 का सेव किया हुआ सटीक सिंक (टैप-सिंक) हो तो वही इस्तेमाल करें
+    if (customTimeline) {
+      for (let i = 0; i < customTimeline.length; i++) {
+        const endAt = (i + 1 < customTimeline.length) ? customTimeline[i + 1].start : Infinity;
+        if (currentTime >= customTimeline[i].start && currentTime < endAt) {
+          activeCard = document.getElementById(customTimeline[i].id);
+          break;
+        }
+      }
+    }
+
     // 1. Check Opening Dohas (with auto-proportional scaling)
-    for (const doha of CHALISA_DATA.openingDohas) {
+    if (!customTimeline) for (const doha of CHALISA_DATA.openingDohas) {
       const scaledStart = doha.start * scale;
       const scaledEnd = doha.end * scale;
       if (currentTime >= scaledStart && currentTime < scaledEnd) {
@@ -1184,7 +1204,7 @@
     }
 
     // 2. Check 40 Chaupais (with auto-proportional scaling)
-    if (!activeCard) {
+    if (!activeCard && !customTimeline) {
       for (const chaupai of CHALISA_DATA.chaupais) {
         const scaledStart = chaupai.start * scale;
         const scaledEnd = chaupai.end * scale;
@@ -1196,7 +1216,7 @@
     }
 
     // 3. Check Closing Doha (with auto-proportional scaling)
-    if (!activeCard) {
+    if (!activeCard && !customTimeline) {
       const closing = CHALISA_DATA.closingDoha;
       const scaledStart = closing.start * scale;
       const scaledEnd = closing.end * scale;
@@ -1251,7 +1271,11 @@
     const audio = dom.audioElement;
     if (!audio) return;
     const scale = getAudioTimeScale();
-    const targetTime = baseStartSecond * scale;
+    let targetTime = baseStartSecond * scale;
+    if (customTimeline) {
+      const hit = customTimeline.find((v) => v.base === baseStartSecond);
+      if (hit) targetTime = hit.start;
+    }
 
     if (audio.duration && targetTime <= audio.duration) {
       audio.currentTime = targetTime;
@@ -1327,9 +1351,10 @@
 
     dom.jaapCounterDisplay.addEventListener('click', () => {
       state.jaapCount++;
-      playTempleBellChime(587.33, 0.6); // Bell sound on bead tap
+      recordDailyJaap(1);
+      if (state.jaapSound) playTempleBellChime(587.33, 0.6); // Bell sound on bead tap
 
-      if (navigator.vibrate) {
+      if (navigator.vibrate && state.jaapVibrate) {
         navigator.vibrate(40); // Haptic feedback
       }
 
@@ -1337,8 +1362,8 @@
       if (state.jaapCount >= 108) {
         state.jaapCount = 0;
         state.malaCount++;
-        playTempleBellChime(880, 2.0); // Grand temple bell sound on mala finish
-        if (navigator.vibrate) {
+        if (state.jaapSound) playTempleBellChime(880, 2.0); // Grand temple bell sound on mala finish
+        if (navigator.vibrate && state.jaapVibrate) {
           navigator.vibrate([100, 50, 150]);
         }
         showToast('॥ १ माला (१०८ जप) पूर्ण! ॥');
@@ -1367,6 +1392,7 @@
     dom.jaapBigNumber.textContent = state.jaapCount;
     dom.jaapStatMala.textContent = state.malaCount;
     dom.jaapStatLifetime.textContent = (state.malaCount * 108) + state.jaapCount;
+    refreshJaapExtras();
   }
 
   /* ==========================================================================
@@ -1414,6 +1440,10 @@
       } else {
         fallbackCopyText(fullText);
       }
+    },
+
+    shareVerseImage: function (id) {
+      shareVerseImageById(id);
     },
 
     shareVerse: function (id) {
@@ -1623,9 +1653,21 @@
 
   function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
+      // पहले से कोई वर्कर चल रहा था और नया आ गया = ऐप का नया संस्करण तैयार
+      const hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (hadController) showUpdateBanner();
+      });
+
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('[PWA] Service Worker registered:', reg.scope))
+          .then((reg) => {
+            console.log('[PWA] Service Worker registered:', reg.scope);
+            // लंबे समय खुली रहने वाली ऐप में भी अपडेट खोजें
+            document.addEventListener('visibilitychange', () => {
+              if (document.visibilityState === 'visible') reg.update().catch(() => {});
+            });
+          })
           .catch((err) => console.warn('[PWA] Service Worker registration failed:', err));
       });
     }
@@ -1636,17 +1678,35 @@
      ========================================================================== */
 
   let wakeLockSentinel = null;
+  let wakeSuspended = false; // स्लीप टाइमर के बाद अगले स्पर्श तक स्क्रीन को सोने दें
 
   async function requestWakeLock() {
+    if (!state.keepAwake || wakeSuspended) return;
     if (!('wakeLock' in navigator)) return;
     if (document.visibilityState !== 'visible') return;
     if (wakeLockSentinel && !wakeLockSentinel.released) return;
     try {
-      wakeLockSentinel = await navigator.wakeLock.request('screen');
-      wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+      const sentinel = await navigator.wakeLock.request('screen');
+      wakeLockSentinel = sentinel;
+      sentinel.addEventListener('release', () => {
+        if (wakeLockSentinel === sentinel) wakeLockSentinel = null;
+      });
     } catch (err) {
       console.warn('[WakeLock] request failed:', err && err.message);
     }
+  }
+
+  function releaseWakeLock() {
+    const s = wakeLockSentinel;
+    wakeLockSentinel = null;
+    try { if (s) s.release(); } catch (e) { /* ignore */ }
+  }
+
+  function setKeepAwake(on) {
+    state.keepAwake = !!on;
+    try { localStorage.setItem('agy_hanuman_keep_awake', on ? 'on' : 'off'); } catch (e) { /* ignore */ }
+    wakeSuspended = false;
+    if (on) requestWakeLock(); else releaseWakeLock();
   }
 
   function initWakeLock() {
@@ -1659,8 +1719,1024 @@
 
     // कुछ ब्राउज़र (जैसे iOS Safari) पहले स्पर्श के बाद ही अनुमति देते हैं
     ['click', 'touchstart', 'keydown'].forEach((evt) => {
-      document.addEventListener(evt, requestWakeLock, { passive: true });
+      document.addEventListener(evt, () => {
+        wakeSuspended = false;
+        requestWakeLock();
+      }, { passive: true });
     });
+  }
+
+  /* ==========================================================================
+     15c. ENHANCEMENTS PACK
+     (सेटिंग्स • टैप-सिंक • स्लीप टाइमर • मीडिया कंट्रोल • जप रिकॉर्ड • बैकअप)
+     सारा डेटा सिर्फ फोन के ब्राउज़र में (localStorage / IndexedDB) - कोई बाहरी DB नहीं।
+     ========================================================================== */
+
+  const LS = {
+    get(key, fallback) {
+      try {
+        const v = localStorage.getItem(key);
+        return v === null ? fallback : v;
+      } catch (e) { return fallback; }
+    },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* ignore */ } },
+    remove(key) { try { localStorage.removeItem(key); } catch (e) { /* ignore */ } }
+  };
+
+  function makeEl(tag, className, html) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (html !== undefined) node.innerHTML = html;
+    return node;
+  }
+
+  /* ---------- IndexedDB (सिर्फ अपनी चुनी हुई MP3 सेव करने के लिए) ---------- */
+
+  function idbOpen() {
+    return new Promise((resolve, reject) => {
+      if (!('indexedDB' in window)) { reject(new Error('IndexedDB unsupported')); return; }
+      const req = indexedDB.open('agy_hanuman_db', 1);
+      req.onupgradeneeded = () => req.result.createObjectStore('kv');
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function idbRun(mode, fn) {
+    return idbOpen().then((db) => new Promise((resolve, reject) => {
+      const tx = db.transaction('kv', mode);
+      const req = fn(tx.objectStore('kv'));
+      tx.oncomplete = () => { db.close(); resolve(req ? req.result : undefined); };
+      tx.onerror = () => { db.close(); reject(tx.error); };
+      tx.onabort = () => { db.close(); reject(tx.error); };
+    }));
+  }
+
+  const idbGet = (key) => idbRun('readonly', (s) => s.get(key));
+  const idbPut = (key, value) => idbRun('readwrite', (s) => s.put(value, key));
+  const idbDelete = (key) => idbRun('readwrite', (s) => s.delete(key));
+
+  /* ---------- पढ़ने की सेटिंग: लाइन की दूरी ---------- */
+
+  function applyLineSpacing(level) {
+    const mults = { normal: 1, relaxed: 1.14, wide: 1.3 };
+    const key = mults[level] ? level : 'normal';
+    state.lineSpacing = key;
+    document.documentElement.style.setProperty('--lh-mult', String(mults[key]));
+    LS.set('agy_hanuman_line_spacing', key);
+  }
+
+  /* ---------- डॉक की ऊँचाई (फ्लोटिंग बटन सही जगह रखने के लिए) ---------- */
+
+  function initDockOffset() {
+    const dock = dom.playerDock;
+    if (!dock) return;
+    const apply = () => {
+      const rect = dock.getBoundingClientRect();
+      const visible = Math.max(0, Math.round(window.innerHeight - rect.top));
+      document.documentElement.style.setProperty('--dock-h', `${visible}px`);
+    };
+    apply();
+    window.addEventListener('resize', apply);
+    dock.addEventListener('transitionend', apply);
+    if (dom.dockCollapseBar) dom.dockCollapseBar.addEventListener('click', () => setTimeout(apply, 400));
+    if ('ResizeObserver' in window) new ResizeObserver(apply).observe(dock);
+    new MutationObserver(apply).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  /* ---------- चलती हुई चौपाई पर वापस जाएँ (Follow बटन) ---------- */
+
+  let followBtn = null;
+  let followTicking = false;
+
+  function getReadingViewport() {
+    const nav = document.querySelector('.sangrah-nav-container');
+    const top = nav ? nav.getBoundingClientRect().bottom : 70;
+    const dock = dom.playerDock;
+    const bottom = dock ? dock.getBoundingClientRect().top : window.innerHeight - 120;
+    return { top, bottom };
+  }
+
+  function updateFollowButton() {
+    if (!followBtn) return;
+    let show = false;
+    let up = false;
+    const active = document.querySelector('.verse-card.active-playback');
+    if (active && state.activeTab === 'chalisa' && dom.body.classList.contains('audio-playing') && !tapSyncActive) {
+      const r = active.getBoundingClientRect();
+      const vp = getReadingViewport();
+      if (r.bottom < vp.top + 8) { show = true; up = true; }
+      else if (r.top > vp.bottom - 8) { show = true; up = false; }
+    }
+    followBtn.classList.toggle('show', show);
+    if (show) followBtn.textContent = up ? '⬆ चल रही चौपाई पर जाएँ' : '⬇ चल रही चौपाई पर जाएँ';
+  }
+
+  function scheduleFollowUpdate() {
+    if (followTicking) return;
+    followTicking = true;
+    requestAnimationFrame(() => {
+      followTicking = false;
+      updateFollowButton();
+    });
+  }
+
+  function initFollowButton() {
+    followBtn = makeEl('button', 'follow-btn', '⬇ चल रही चौपाई पर जाएँ');
+    followBtn.type = 'button';
+    followBtn.addEventListener('click', () => {
+      const active = document.querySelector('.verse-card.active-playback');
+      isUserInteractingWithScroll = false;
+      clearTimeout(userScrollTimeout);
+      if (active) scrollToVerseCard(active);
+      followBtn.classList.remove('show');
+    });
+    document.body.appendChild(followBtn);
+
+    window.addEventListener('scroll', scheduleFollowUpdate, { passive: true });
+    window.addEventListener('resize', scheduleFollowUpdate);
+    ['timeupdate', 'play', 'pause', 'ended'].forEach((evt) => {
+      dom.audioElement.addEventListener(evt, scheduleFollowUpdate);
+    });
+
+    // उपयोगकर्ता खुद स्क्रॉल करे तो ऑटो-स्क्रॉल थोड़ी देर रुक जाए (पहले यह जुड़ा ही नहीं था)
+    ['wheel', 'touchmove'].forEach((evt) => {
+      window.addEventListener(evt, markUserScrolling, { passive: true });
+    });
+  }
+
+  /* ---------- "जहाँ छोड़ा था वहीं से" (पिछली पढ़ने की जगह) ---------- */
+
+  const POS_KEY = 'agy_hanuman_last_pos';
+  let posSaveTimer = null;
+  let resumeBanner = null;
+
+  function computeReadingPosition() {
+    const section = dom.sections[state.activeTab];
+    if (!section) return null;
+    const cards = section.querySelectorAll('.verse-card[id]');
+    if (!cards.length) return null;
+    const nav = document.querySelector('.sangrah-nav-container');
+    const navBottom = nav ? nav.getBoundingClientRect().bottom : 70;
+    let found = null;
+    for (const c of cards) {
+      if (c.getBoundingClientRect().bottom > navBottom + 8) { found = c; break; }
+    }
+    if (!found) found = cards[cards.length - 1];
+    const badge = found.querySelector('.verse-badge');
+    return {
+      tab: state.activeTab,
+      id: found.id,
+      label: badge ? badge.textContent.trim() : '',
+      ts: Date.now()
+    };
+  }
+
+  function saveReadingPosition() {
+    if (window.scrollY < 200) return; // शुरुआत में हों तो पुरानी सार्थक जगह बनी रहे
+    const pos = computeReadingPosition();
+    if (pos) LS.set(POS_KEY, JSON.stringify(pos));
+  }
+
+  function hideResumeBanner() {
+    if (resumeBanner) resumeBanner.classList.remove('show');
+  }
+
+  function jumpToSavedPosition(pos) {
+    switchTab(pos.tab);
+    requestAnimationFrame(() => {
+      const card = document.getElementById(pos.id);
+      if (!card) return;
+      const nav = document.querySelector('.sangrah-nav-container');
+      const navBottom = nav ? nav.getBoundingClientRect().bottom : 70;
+      const y = card.getBoundingClientRect().top + window.scrollY - navBottom - 12;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
+    });
+  }
+
+  function initResumeReading() {
+    window.addEventListener('scroll', () => {
+      clearTimeout(posSaveTimer);
+      posSaveTimer = setTimeout(saveReadingPosition, 600);
+    }, { passive: true });
+    window.addEventListener('pagehide', saveReadingPosition);
+
+    let pos = null;
+    try { pos = JSON.parse(LS.get(POS_KEY, 'null')); } catch (e) { pos = null; }
+    if (!pos || !pos.id || !pos.tab || !document.getElementById(pos.id)) return;
+
+    resumeBanner = makeEl('div', 'resume-banner');
+    resumeBanner.innerHTML = `
+      <span class="resume-text">📖 पिछली बार आप <b>${pos.label || 'यहाँ'}</b> पर थे</span>
+      <button type="button" class="resume-go">वहीं से पढ़ें</button>
+      <button type="button" class="resume-close" aria-label="बंद करें">✕</button>
+    `;
+    resumeBanner.querySelector('.resume-go').addEventListener('click', () => {
+      hideResumeBanner();
+      jumpToSavedPosition(pos);
+    });
+    resumeBanner.querySelector('.resume-close').addEventListener('click', hideResumeBanner);
+    document.body.appendChild(resumeBanner);
+
+    setTimeout(() => resumeBanner.classList.add('show'), 900);
+    setTimeout(hideResumeBanner, 13000);
+    dom.audioElement.addEventListener('play', hideResumeBanner);
+  }
+
+  /* ---------- स्लीप टाइमर ---------- */
+
+  const sleepTimer = { minutes: 0, endAt: 0, timerId: null, fadeId: null };
+
+  function clearSleepTimer() {
+    clearTimeout(sleepTimer.timerId);
+    sleepTimer.timerId = null;
+    sleepTimer.endAt = 0;
+    sleepTimer.minutes = 0;
+  }
+
+  function setSleepTimer(minutes) {
+    clearSleepTimer();
+    if (!minutes) {
+      showToast('स्लीप टाइमर बंद किया');
+      return;
+    }
+    sleepTimer.minutes = minutes;
+    sleepTimer.endAt = Date.now() + minutes * 60000;
+    sleepTimer.timerId = setTimeout(fireSleepTimer, minutes * 60000);
+    showToast(`${minutes} मिनट बाद ऑडियो अपने आप बंद होगा`, '😴');
+  }
+
+  function fireSleepTimer() {
+    clearSleepTimer();
+    const audio = dom.audioElement;
+    const startVol = audio.volume;
+    let step = 0;
+    const steps = 16;
+
+    clearInterval(sleepTimer.fadeId);
+    sleepTimer.fadeId = setInterval(() => {
+      step++;
+      try { audio.volume = Math.max(0, startVol * (1 - step / steps)); } catch (e) { /* iOS: read-only */ }
+      if (step >= steps) {
+        clearInterval(sleepTimer.fadeId);
+        audio.pause();
+        try { audio.volume = startVol; } catch (e) { /* ignore */ }
+      }
+    }, 250);
+
+    // सोते समय स्क्रीन भी अपने आप बंद हो सके
+    wakeSuspended = true;
+    releaseWakeLock();
+    showToast('ऑडियो बंद हो रहा है • शुभ रात्रि 🙏', '😴');
+  }
+
+  function checkSleepTimer() {
+    if (sleepTimer.endAt && Date.now() >= sleepTimer.endAt) fireSleepTimer();
+  }
+
+  function sleepRemainingText() {
+    if (!sleepTimer.endAt) return 'बंद है';
+    const left = Math.max(0, Math.round((sleepTimer.endAt - Date.now()) / 60000));
+    return `लगभग ${left} मिनट शेष`;
+  }
+
+  /* ---------- मीडिया सेशन (लॉक स्क्रीन / नोटिफिकेशन कंट्रोल) ---------- */
+
+  function baseTimeline() {
+    const list = [];
+    CHALISA_DATA.openingDohas.forEach((d) => list.push({ id: d.id, label: d.label, base: d.start }));
+    CHALISA_DATA.chaupais.forEach((c) => list.push({ id: `chaupai-${c.num}`, label: `चौपाई ${c.num}`, base: c.start }));
+    const cl = CHALISA_DATA.closingDoha;
+    list.push({ id: cl.id, label: cl.label, base: cl.start });
+    return list;
+  }
+
+  function getVerseTimeline() {
+    const list = baseTimeline();
+    const scale = getAudioTimeScale();
+    list.forEach((v, i) => {
+      v.start = (customTimings && typeof customTimings.starts[i] === 'number')
+        ? customTimings.starts[i]
+        : v.base * scale;
+    });
+    return list;
+  }
+
+  function jumpVerse(direction) {
+    const audio = dom.audioElement;
+    const t = audio.currentTime;
+    const timeline = getVerseTimeline();
+    let target = null;
+    if (direction > 0) {
+      target = timeline.find((v) => v.start > t + 0.4) || null;
+    } else {
+      const past = timeline.filter((v) => v.start < t - 2);
+      target = past.length ? past[past.length - 1] : timeline[0];
+    }
+    if (!target) return;
+    audio.currentTime = target.start;
+    if (audio.paused) audio.play().catch(() => {});
+  }
+
+  function initMediaSession() {
+    if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
+    const audio = dom.audioElement;
+    const ms = navigator.mediaSession;
+
+    const updateMeta = () => {
+      try {
+        ms.metadata = new MediaMetadata({
+          title: (dom.audioTrackName && dom.audioTrackName.textContent.trim()) || 'श्री हनुमान चालीसा',
+          artist: 'श्री हनुमान भक्ति संग्रह',
+          album: 'हनुमान चालीसा',
+          artwork: [
+            { src: 'assets/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: 'assets/icons/icon-512.png', sizes: '512x512', type: 'image/png' }
+          ]
+        });
+      } catch (e) { /* ignore */ }
+    };
+    updateMeta();
+    if (dom.audioTrackName && 'MutationObserver' in window) {
+      new MutationObserver(updateMeta).observe(dom.audioTrackName, { childList: true, characterData: true, subtree: true });
+    }
+
+    const handle = (name, fn) => { try { ms.setActionHandler(name, fn); } catch (e) { /* unsupported */ } };
+    handle('play', () => { audio.play().catch(() => {}); });
+    handle('pause', () => { audio.pause(); });
+    handle('stop', () => { audio.pause(); audio.currentTime = 0; });
+    handle('seekbackward', (d) => { audio.currentTime = Math.max(0, audio.currentTime - ((d && d.seekOffset) || 10)); });
+    handle('seekforward', (d) => { audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + ((d && d.seekOffset) || 10)); });
+    handle('seekto', (d) => { if (d && typeof d.seekTime === 'number') audio.currentTime = d.seekTime; });
+    handle('previoustrack', () => jumpVerse(-1));
+    handle('nexttrack', () => jumpVerse(1));
+
+    let lastPosUpdate = 0;
+    audio.addEventListener('timeupdate', () => {
+      const now = Date.now();
+      if (now - lastPosUpdate < 1000) return;
+      lastPosUpdate = now;
+      if (typeof ms.setPositionState === 'function' && audio.duration && isFinite(audio.duration)) {
+        try {
+          ms.setPositionState({
+            duration: audio.duration,
+            playbackRate: audio.playbackRate || 1,
+            position: Math.min(audio.currentTime, audio.duration)
+          });
+        } catch (e) { /* ignore */ }
+      }
+    });
+    audio.addEventListener('play', () => { ms.playbackState = 'playing'; });
+    audio.addEventListener('pause', () => { ms.playbackState = 'paused'; });
+  }
+
+  /* ---------- अपनी MP3 + टैप-सिंक (हर गाने के हिसाब से सही समय) ---------- */
+
+  const SYNC_KEY = 'agy_hanuman_custom_sync';
+  const BUILTIN_SRC = 'assets/audio/hanuman-chalisa-ambient.wav';
+  let customTimings = null;   // { key, starts: [हर पद का असली शुरू-सेकंड] }
+  let customTimeline = null;
+  let currentTrackKey = null; // None = इनबिल्ट धुन
+  let currentTrackName = '';
+  let tapSyncActive = false;
+  let builtinTrackLabel = '';
+  let builtinChipLabel = '';
+
+  function loadSavedTimings(key) {
+    customTimings = null;
+    customTimeline = null;
+    try {
+      const saved = JSON.parse(LS.get(SYNC_KEY, 'null'));
+      if (
+        saved && saved.key === key && Array.isArray(saved.starts) &&
+        saved.starts.length === baseTimeline().length &&
+        saved.starts.every((n) => typeof n === 'number' && isFinite(n))
+      ) {
+        customTimings = { key, starts: saved.starts };
+        customTimeline = getVerseTimeline();
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function onCustomFileChosen(file) {
+    currentTrackKey = `${file.name}|${file.size}|${file.lastModified}`;
+    currentTrackName = file.name;
+    tapSyncCancel(true);
+    loadSavedTimings(currentTrackKey);
+    clearHighlights();
+    idbPut('customTrack', { blob: file, name: file.name, key: currentTrackKey }).catch(() => {});
+    if (customTimings) setTimeout(() => showToast('इस MP3 का सेव किया हुआ सिंक लागू हुआ', '🎯'), 900);
+  }
+
+  async function restoreSavedTrack() {
+    try {
+      const rec = await idbGet('customTrack');
+      if (!rec || !rec.blob) return;
+      const audio = dom.audioElement;
+      if (!audio.paused || currentTrackKey) return;
+      audio.src = URL.createObjectURL(rec.blob);
+      audio.load();
+      currentTrackKey = rec.key;
+      currentTrackName = rec.name || 'मेरी MP3';
+      dom.audioTrackName.textContent = currentTrackName;
+      dom.audioSourceChip.textContent = 'लोकल MP3';
+      loadSavedTimings(rec.key);
+    } catch (e) { /* IndexedDB उपलब्ध नहीं - इनबिल्ट धुन चलती रहेगी */ }
+  }
+
+  function revertToBuiltinTrack() {
+    idbDelete('customTrack').catch(() => {});
+    tapSyncCancel(true);
+    currentTrackKey = null;
+    currentTrackName = '';
+    customTimings = null;
+    customTimeline = null;
+    const audio = dom.audioElement;
+    audio.pause();
+    audio.src = BUILTIN_SRC;
+    audio.load();
+    dom.audioTrackName.textContent = builtinTrackLabel;
+    dom.audioSourceChip.textContent = builtinChipLabel;
+    clearHighlights();
+    showToast('इनबिल्ट धुन पर लौट आए');
+  }
+
+  function resetCustomSync() {
+    LS.remove(SYNC_KEY);
+    customTimings = null;
+    customTimeline = null;
+    clearHighlights();
+    showToast('सिंक रीसेट हुआ (अनुमानित समय लागू)', '🔄');
+  }
+
+  /* --- टैप-सिंक पैनल --- */
+
+  const tapSync = { panel: null, timeline: [], idx: 0, starts: [] };
+
+  function scrollToSyncCard(card) {
+    if (!card) return;
+    const nav = document.querySelector('.sangrah-nav-container');
+    const navBottom = nav ? nav.getBoundingClientRect().bottom : 70;
+    const panelTop = tapSync.panel ? tapSync.panel.getBoundingClientRect().top : window.innerHeight - 220;
+    const visible = panelTop - navBottom;
+    const rect = card.getBoundingClientRect();
+    const y = rect.top + window.scrollY - navBottom - Math.max(8, (visible - rect.height) / 2);
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  }
+
+  function renderSyncPanel() {
+    const p = tapSync.panel;
+    if (!p) return;
+    const total = tapSync.timeline.length;
+    const v = tapSync.timeline[tapSync.idx];
+    p.querySelector('.sync-progress').textContent = `${tapSync.idx}/${total}`;
+    p.querySelector('.sync-next').innerHTML = `अगला: <b>${v.label}</b>`;
+    document.querySelectorAll('.verse-card.sync-target').forEach((c) => c.classList.remove('sync-target'));
+    const card = document.getElementById(v.id);
+    if (card) {
+      card.classList.add('sync-target');
+      const vt = card.querySelector('.verse-text');
+      const firstLine = vt ? vt.innerText.split('\n')[0].trim() : '';
+      p.querySelector('.sync-line').textContent = firstLine;
+      scrollToSyncCard(card);
+    }
+  }
+
+  function destroySyncPanel() {
+    document.querySelectorAll('.verse-card.sync-target').forEach((c) => c.classList.remove('sync-target'));
+    if (tapSync.panel) {
+      tapSync.panel.remove();
+      tapSync.panel = null;
+    }
+    dom.body.classList.remove('tap-syncing');
+  }
+
+  function tapSyncCancel(silent) {
+    if (!tapSyncActive) return;
+    tapSyncActive = false;
+    destroySyncPanel();
+    if (!silent) showToast('टैप-सिंक रद्द किया');
+  }
+
+  function finishTapSync() {
+    tapSyncActive = false;
+    const starts = tapSync.starts.slice();
+    customTimings = { key: currentTrackKey, starts };
+    customTimeline = getVerseTimeline();
+    LS.set(SYNC_KEY, JSON.stringify({ key: currentTrackKey, starts }));
+    destroySyncPanel();
+    showToast('सिंक सेव हो गया ✓ अब हर चौपाई गाने के साथ चलेगी', '🎯');
+  }
+
+  function onSyncTap() {
+    const audio = dom.audioElement;
+    const t = audio.currentTime;
+    const prev = tapSync.starts.length ? tapSync.starts[tapSync.starts.length - 1] : -1;
+    if (t <= prev + 0.3) {
+      showToast('थोड़ा रुककर अगली पंक्ति शुरू होने पर टैप करें', '⚠️');
+      return;
+    }
+    tapSync.starts.push(Math.round(t * 100) / 100);
+    tapSync.idx++;
+    if (navigator.vibrate) navigator.vibrate(20);
+    if (tapSync.idx >= tapSync.timeline.length) { finishTapSync(); return; }
+    renderSyncPanel();
+  }
+
+  function onSyncUndo() {
+    if (tapSync.idx === 0) return;
+    const removed = tapSync.starts.pop();
+    tapSync.idx--;
+    const audio = dom.audioElement;
+    audio.currentTime = Math.max(0, removed - 1.5);
+    if (audio.paused) audio.play().catch(() => {});
+    renderSyncPanel();
+  }
+
+  function startTapSync() {
+    if (!currentTrackKey) {
+      showToast('पहले 📁 अपनी MP3 चुनें', '⚠️');
+      return;
+    }
+    dom.modalOverlay.classList.remove('open');
+    switchTab('chalisa');
+    tapSyncActive = true;
+    clearHighlights();
+    tapSync.timeline = baseTimeline();
+    tapSync.idx = 0;
+    tapSync.starts = [];
+
+    const panel = makeEl('div', 'sync-panel');
+    panel.setAttribute('role', 'dialog');
+    panel.innerHTML = `
+      <div class="sync-head">
+        <span class="sync-title">🎯 टैप-सिंक</span>
+        <span class="sync-progress">0/${tapSync.timeline.length}</span>
+      </div>
+      <div class="sync-hint">गाना सुनते रहें। जैसे ही नीचे की पंक्ति गाना शुरू हो, बड़े बटन को टैप करें।</div>
+      <div class="sync-next"></div>
+      <div class="sync-line"></div>
+      <button type="button" class="sync-tap" data-s="tap">✋ यह पंक्ति अभी शुरू हुई</button>
+      <div class="sync-row">
+        <button type="button" class="chip-btn" data-s="play">⏯ चलाएँ / रोकें</button>
+        <button type="button" class="chip-btn" data-s="undo">↶ पीछे</button>
+        <button type="button" class="chip-btn" data-s="cancel">✖ रद्द</button>
+      </div>
+    `;
+    panel.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-s]');
+      if (!btn) return;
+      const act = btn.dataset.s;
+      if (act === 'tap') onSyncTap();
+      else if (act === 'undo') onSyncUndo();
+      else if (act === 'cancel') tapSyncCancel(false);
+      else if (act === 'play') togglePlayPause();
+    });
+    document.body.appendChild(panel);
+    tapSync.panel = panel;
+    dom.body.classList.add('tap-syncing');
+
+    const audio = dom.audioElement;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    renderSyncPanel();
+  }
+
+  /* ---------- डिजिटल जप माला: आज का जप, पिछले 7 दिन, आवाज़/कंपन ---------- */
+
+  const JAAP_DAILY_KEY = 'agy_hanuman_jaap_daily';
+
+  function dateKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function readJaapDaily() {
+    try {
+      const d = JSON.parse(LS.get(JAAP_DAILY_KEY, '{}'));
+      return d && typeof d === 'object' ? d : {};
+    } catch (e) { return {}; }
+  }
+
+  function recordDailyJaap(n) {
+    const data = readJaapDaily();
+    const k = dateKey(new Date());
+    data[k] = (data[k] || 0) + n;
+    const keys = Object.keys(data).sort();
+    while (keys.length > 60) delete data[keys.shift()];
+    LS.set(JAAP_DAILY_KEY, JSON.stringify(data));
+  }
+
+  function refreshJaapExtras() {
+    if (dom.jaapCounterDisplay) {
+      dom.jaapCounterDisplay.style.setProperty('--jaap-progress', `${Math.min(100, (state.jaapCount / 108) * 100)}%`);
+    }
+    const todayEl = document.getElementById('jaapStatToday');
+    const histEl = document.getElementById('jaapHistory');
+    const streakEl = document.getElementById('jaapStreak');
+    if (!todayEl && !histEl) return;
+
+    const data = readJaapDaily();
+    const today = new Date();
+    if (todayEl) todayEl.textContent = data[dateKey(today)] || 0;
+
+    if (histEl) {
+      const days = ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'];
+      const cols = [];
+      let max = 1;
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+        const val = data[dateKey(d)] || 0;
+        max = Math.max(max, val);
+        cols.push({ day: days[d.getDay()], val, isToday: i === 0 });
+      }
+      histEl.innerHTML = cols.map((c) => `
+        <div class="jh-col${c.isToday ? ' today' : ''}">
+          <div class="jh-val">${c.val}</div>
+          <div class="jh-barwrap"><div class="jh-bar" style="height:${Math.max(4, Math.round((c.val / max) * 100))}%"></div></div>
+          <div class="jh-day">${c.day}</div>
+        </div>`).join('');
+    }
+
+    if (streakEl) {
+      let streak = 0;
+      const cursor = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      if (!data[dateKey(cursor)]) cursor.setDate(cursor.getDate() - 1);
+      while (data[dateKey(cursor)]) {
+        streak++;
+        cursor.setDate(cursor.getDate() - 1);
+      }
+      streakEl.textContent = streak > 0 ? `🔥 लगातार ${streak} दिन` : '';
+    }
+  }
+
+  function updateJaapToggleButtons() {
+    const s = document.getElementById('jaapSoundBtn');
+    const v = document.getElementById('jaapVibrateBtn');
+    if (s) s.textContent = state.jaapSound ? '🔔 आवाज़: चालू' : '🔕 आवाज़: बंद';
+    if (v) {
+      if (!navigator.vibrate) { v.style.display = 'none'; return; }
+      v.textContent = state.jaapVibrate ? '📳 कंपन: चालू' : '📴 कंपन: बंद';
+    }
+  }
+
+  function initJaapExtras() {
+    const s = document.getElementById('jaapSoundBtn');
+    const v = document.getElementById('jaapVibrateBtn');
+    if (s) s.addEventListener('click', () => {
+      state.jaapSound = !state.jaapSound;
+      LS.set('agy_hanuman_jaap_sound', state.jaapSound ? 'on' : 'off');
+      updateJaapToggleButtons();
+    });
+    if (v) v.addEventListener('click', () => {
+      state.jaapVibrate = !state.jaapVibrate;
+      LS.set('agy_hanuman_jaap_vibrate', state.jaapVibrate ? 'on' : 'off');
+      updateJaapToggleButtons();
+    });
+    updateJaapToggleButtons();
+    refreshJaapExtras();
+  }
+
+  /* ---------- पद की सुंदर इमेज बनाकर शेयर करना ---------- */
+
+  function wrapCanvasLine(ctx, text, maxWidth) {
+    const words = text.split(/\s+/);
+    const lines = [];
+    let cur = '';
+    words.forEach((w) => {
+      const test = cur ? `${cur} ${w}` : w;
+      if (ctx.measureText(test).width > maxWidth && cur) {
+        lines.push(cur);
+        cur = w;
+      } else {
+        cur = test;
+      }
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+
+  async function buildVerseImage(card) {
+    const vt = card.querySelector('.verse-text');
+    if (!vt) return null;
+    const rawLines = vt.innerText.split('\n').map((s) => s.trim()).filter(Boolean);
+    const badgeEl = card.querySelector('.verse-badge');
+    const badge = badgeEl ? badgeEl.textContent.trim() : '';
+
+    try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) { /* ignore */ }
+
+    const W = 1080;
+    const pad = 90;
+    const fontFamily = '"Noto Sans Devanagari","Nirmala UI","Mangal","Kohinoor Devanagari","Devanagari Sangam MN",Roboto,sans-serif';
+    const fontSize = 52;
+    const lineH = Math.round(fontSize * 1.75);
+
+    const probe = document.createElement('canvas').getContext('2d');
+    probe.font = `700 ${fontSize}px ${fontFamily}`;
+    const lines = [];
+    rawLines.forEach((l) => wrapCanvasLine(probe, l, W - pad * 2).forEach((x) => lines.push(x)));
+
+    const headerH = 330;
+    const footerH = 250;
+    const H = Math.max(1080, headerH + lines.length * lineH + footerH);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#FFF8E7');
+    bg.addColorStop(1, '#FFD9A0');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = '#D4AF37';
+    ctx.strokeRect(34, 34, W - 68, H - 68);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#E65100';
+    ctx.strokeRect(54, 54, W - 108, H - 108);
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    ctx.fillStyle = '#E65100';
+    ctx.font = `700 54px ${fontFamily}`;
+    ctx.fillText('॥ श्री हनुमान जी ॥', W / 2, 150);
+
+    if (badge) {
+      ctx.font = `700 36px ${fontFamily}`;
+      const bw = ctx.measureText(badge).width + 70;
+      ctx.fillStyle = '#E65100';
+      const bx = (W - bw) / 2;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(bx, 215, bw, 66, 33); else ctx.rect(bx, 215, bw, 66);
+      ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(badge, W / 2, 249);
+    }
+
+    ctx.fillStyle = '#800000';
+    ctx.font = `700 ${fontSize}px ${fontFamily}`;
+    lines.forEach((l, i) => ctx.fillText(l, W / 2, headerH + i * lineH + lineH / 2));
+
+    ctx.fillStyle = '#E65100';
+    ctx.font = `700 46px ${fontFamily}`;
+    ctx.fillText('जय श्री राम • जय हनुमान', W / 2, H - 150);
+    ctx.fillStyle = '#8D5B3A';
+    ctx.font = `600 30px ${fontFamily}`;
+    ctx.fillText('श्री हनुमान भक्ति संग्रह', W / 2, H - 95);
+
+    return new Promise((resolve) => canvas.toBlob((b) => resolve(b), 'image/png'));
+  }
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  }
+
+  async function shareVerseImageById(id) {
+    const card = document.getElementById(id);
+    if (!card) return;
+    let blob = null;
+    try { blob = await buildVerseImage(card); } catch (e) { blob = null; }
+    if (!blob) { showToast('इमेज नहीं बन सकी', '⚠️'); return; }
+
+    const vt = card.querySelector('.verse-text');
+    const text = vt ? vt.innerText : '';
+    const file = new File([blob], `hanuman-${id}.png`, { type: 'image/png' });
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'श्री हनुमान भक्ति संग्रह',
+          text: `॥ श्री हनुमान जी ॥\n\n${text}\n\nजय श्री राम! जय हनुमान!\n`
+        });
+        return;
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') return; // उपयोगकर्ता ने खुद रद्द किया
+    }
+    downloadBlob(blob, `hanuman-${id}.png`);
+    showToast('इमेज डाउनलोड हो गई 🖼');
+  }
+
+  /* ---------- बैकअप (सिर्फ फाइल - कोई सर्वर नहीं) ---------- */
+
+  function exportBackup() {
+    const items = {};
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf('agy_hanuman_') === 0) items[k] = localStorage.getItem(k);
+      }
+    } catch (e) { /* ignore */ }
+    const payload = { app: 'hanuman-chalisa', version: 1, exportedAt: new Date().toISOString(), items };
+    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hanuman-chalisa-backup-${dateKey(new Date())}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    showToast('बैकअप फाइल सेव की गई', '💾');
+  }
+
+  function importBackup(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(String(reader.result));
+        if (!data || data.app !== 'hanuman-chalisa' || typeof data.items !== 'object') {
+          showToast('यह सही बैकअप फाइल नहीं है', '⚠️');
+          return;
+        }
+        let n = 0;
+        Object.keys(data.items).forEach((k) => {
+          if (k.indexOf('agy_hanuman_') === 0 && typeof data.items[k] === 'string') {
+            LS.set(k, data.items[k]);
+            n++;
+          }
+        });
+        showToast(`${n} सेटिंग्स वापस लाई गईं • ऐप रीलोड हो रही है`, '💾');
+        setTimeout(() => location.reload(), 1200);
+      } catch (e) {
+        showToast('बैकअप फाइल पढ़ी नहीं जा सकी', '⚠️');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  /* ---------- सेटिंग्स पैनल ---------- */
+
+  const SETTINGS_TITLE = 'सेटिंग्स';
+
+  function renderSettings() {
+    const chip = (act, val, label, on) =>
+      `<button type="button" class="chip-btn set-chip${on ? ' active' : ''}" data-act="${act}" data-val="${val}">${label}</button>`;
+    const sleepOn = (m) => (m === 0 ? !sleepTimer.endAt : sleepTimer.minutes === m);
+    const hasCustom = !!currentTrackKey;
+
+    dom.modalTitle.textContent = SETTINGS_TITLE;
+    dom.modalBody.innerHTML = `
+      <div class="set-section">
+        <div class="set-title">🖥️ स्क्रीन</div>
+        <div class="set-row">
+          ${chip('awake', 'on', 'चालू रखें', state.keepAwake)}
+          ${chip('awake', 'off', 'सामान्य', !state.keepAwake)}
+        </div>
+        <div class="set-note">चालू होने पर ऐप खुली रहने तक स्क्रीन बंद या डिम नहीं होगी। (बैटरी ज़्यादा लगेगी)</div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">🎨 पढ़ने की थीम</div>
+        <div class="set-row">
+          ${chip('theme', 'light', '☀️ दिन', state.theme === 'light')}
+          ${chip('theme', 'sepia', '📜 सेपिया', state.theme === 'sepia')}
+          ${chip('theme', 'dark', '🌙 रात्रि', state.theme === 'dark')}
+        </div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">↕️ पंक्तियों की दूरी</div>
+        <div class="set-row">
+          ${chip('lh', 'normal', 'सामान्य', state.lineSpacing === 'normal')}
+          ${chip('lh', 'relaxed', 'ज़्यादा', state.lineSpacing === 'relaxed')}
+          ${chip('lh', 'wide', 'बहुत ज़्यादा', state.lineSpacing === 'wide')}
+        </div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">😴 स्लीप टाइमर</div>
+        <div class="set-row">
+          ${chip('sleep', '0', 'बंद', sleepOn(0))}
+          ${chip('sleep', '15', '15 मिनट', sleepOn(15))}
+          ${chip('sleep', '30', '30 मिनट', sleepOn(30))}
+          ${chip('sleep', '60', '60 मिनट', sleepOn(60))}
+        </div>
+        <div class="set-note">स्थिति: ${sleepRemainingText()}। समय पूरा होने पर ऑडियो धीरे-धीरे बंद होगा और स्क्रीन भी सोने दी जाएगी।</div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">🎯 अपनी MP3 के साथ सटीक सिंक</div>
+        <div class="set-note" style="margin-top:0">
+          चालू ऑडियो: <b>${hasCustom ? currentTrackName : 'इनबिल्ट धुन'}</b><br>
+          सिंक: <b>${customTimings ? 'सेव है ✓' : (hasCustom ? 'अभी नहीं (अनुमानित समय)' : '—')}</b>
+        </div>
+        <div class="set-row">
+          <button type="button" class="chip-btn set-chip" data-act="sync-start">🎯 टैप-सिंक शुरू करें</button>
+          ${customTimings ? '<button type="button" class="chip-btn set-chip" data-act="sync-reset">↺ सिंक रीसेट</button>' : ''}
+          ${hasCustom ? '<button type="button" class="chip-btn set-chip" data-act="sync-builtin">↩ इनबिल्ट धुन पर लौटें</button>' : ''}
+        </div>
+        <div class="set-note">${hasCustom
+          ? 'गाना चलेगा; हर पद शुरू होते ही बड़े बटन को टैप करें। यह आपके फोन में ही सेव रहेगा।'
+          : 'पहले प्लेयर में “📁 अपनी MP3 चुनें” से अपना भजन चुनें, फिर यहाँ से टैप-सिंक करें।'}</div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">💾 बैकअप (सिर्फ फाइल)</div>
+        <div class="set-row">
+          <button type="button" class="chip-btn set-chip" data-act="backup-export">⬇ बैकअप सेव करें</button>
+          <button type="button" class="chip-btn set-chip" data-act="backup-import">⬆ बैकअप वापस लाएँ</button>
+        </div>
+        <div class="set-note">जप-गिनती, बुकमार्क, सेटिंग्स आदि एक फाइल में। नया फोन लेने पर यहीं से वापस ला सकते हैं। (अपनी MP3 फाइल इसमें शामिल नहीं)</div>
+      </div>
+    `;
+  }
+
+  function openSettings() {
+    renderSettings();
+    dom.modalOverlay.classList.add('open');
+  }
+
+  function onSettingsClick(e) {
+    if (dom.modalTitle.textContent !== SETTINGS_TITLE) return;
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const act = btn.dataset.act;
+    const val = btn.dataset.val;
+
+    switch (act) {
+      case 'awake': setKeepAwake(val === 'on'); showToast(val === 'on' ? 'स्क्रीन चालू रहेगी' : 'स्क्रीन सामान्य रूप से बंद होगी', '🖥️'); break;
+      case 'theme': applyTheme(val); break;
+      case 'lh': applyLineSpacing(val); break;
+      case 'sleep': setSleepTimer(parseInt(val, 10) || 0); break;
+      case 'sync-start': startTapSync(); return;
+      case 'sync-reset': resetCustomSync(); break;
+      case 'sync-builtin': revertToBuiltinTrack(); break;
+      case 'backup-export': exportBackup(); return;
+      case 'backup-import': {
+        const input = document.getElementById('backupFileInput');
+        if (input) input.click();
+        return;
+      }
+      default: return;
+    }
+    renderSettings();
+  }
+
+  /* ---------- नया अपडेट आने की सूचना ---------- */
+
+  function showUpdateBanner() {
+    if (document.querySelector('.update-banner')) return;
+    const b = makeEl('div', 'update-banner', `
+      <span>🆕 ऐप का नया संस्करण तैयार है</span>
+      <button type="button" class="update-go">ताज़ा करें</button>
+      <button type="button" class="update-close" aria-label="बाद में">✕</button>
+    `);
+    b.querySelector('.update-go').addEventListener('click', () => location.reload());
+    b.querySelector('.update-close').addEventListener('click', () => b.remove());
+    document.body.appendChild(b);
+  }
+
+  /* ---------- सभी एन्हांसमेंट्स की शुरुआत ---------- */
+
+  function initEnhancements() {
+    builtinTrackLabel = dom.audioTrackName ? dom.audioTrackName.textContent : '';
+    builtinChipLabel = dom.audioSourceChip ? dom.audioSourceChip.textContent : '';
+
+    applyLineSpacing(state.lineSpacing);
+    initDockOffset();
+    initFollowButton();
+    initResumeReading();
+    initMediaSession();
+    initJaapExtras();
+
+    // अपनी MP3 चुनने पर उसे फोन में सेव करें और उसका सिंक पहचानें
+    dom.customAudioInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) onCustomFileChosen(file);
+    });
+    restoreSavedTrack();
+
+    // सेटिंग्स बटन + पैनल
+    const settingsBtn = document.getElementById('settingsBtn');
+    if (settingsBtn) settingsBtn.addEventListener('click', openSettings);
+    dom.modalBody.addEventListener('click', onSettingsClick);
+
+    // बैकअप फाइल चुनने के लिए छिपा इनपुट
+    const backupInput = makeEl('input');
+    backupInput.type = 'file';
+    backupInput.id = 'backupFileInput';
+    backupInput.accept = 'application/json,.json';
+    backupInput.style.display = 'none';
+    backupInput.addEventListener('change', () => {
+      const f = backupInput.files && backupInput.files[0];
+      if (f) importBackup(f);
+      backupInput.value = '';
+    });
+    document.body.appendChild(backupInput);
+
+    // स्लीप टाइमर की जाँच ऑडियो चलते समय
+    dom.audioElement.addEventListener('timeupdate', checkSleepTimer);
   }
 
   /* ==========================================================================
@@ -1682,6 +2758,7 @@
     initEventListeners();
     registerServiceWorker();
     initWakeLock();
+    initEnhancements();
 
     console.log('॥ श्री हनुमान जी महाराज की जय ॥ App initialized successfully.');
   }
