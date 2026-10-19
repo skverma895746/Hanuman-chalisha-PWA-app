@@ -1232,10 +1232,8 @@
       activeCard.classList.add('active-playback');
       dom.body.classList.add('has-active-verse');
 
-      // Nayi chaupai shuru hone par halka kampan (audio chal raha ho aur option on ho)
-      if (state.audioVibrate && navigator.vibrate && !dom.audioElement.paused) {
-        navigator.vibrate(35);
-      }
+      // Nayi chaupai shuru hone par halka kampan (audioBuzz khud on/off check karta hai)
+      if (!dom.audioElement.paused) audioBuzz(35);
 
       // Scroll strictly according to song progress, centered in visible reading window
       if (state.autoScroll && !isUserInteractingWithScroll) {
@@ -2266,7 +2264,7 @@
     }
     tapSync.starts.push(Math.round(t * 100) / 100);
     tapSync.idx++;
-    if (navigator.vibrate) navigator.vibrate(20);
+    audioBuzz(20); // audio vibration: button OFF hone par nahi chalega
     if (tapSync.idx >= tapSync.timeline.length) { finishTapSync(); return; }
     renderSyncPanel();
   }
@@ -2415,15 +2413,33 @@
     btn.classList.toggle('active', state.audioVibrate);
   }
 
+  // Audio ke saare vibration sirf yahin se guzrenge
+  function audioBuzz(pattern) {
+    if (!state.audioVibrate || !navigator.vibrate) return;
+    try { navigator.vibrate(pattern); } catch (e) { /* ignore */ }
+  }
+
+  // Audio vibration ON/OFF ka ek hi control point
+  function setAudioVibrate(on, announce) {
+    state.audioVibrate = !!on;
+    LS.set('agy_hanuman_audio_vibrate', on ? 'on' : 'off');
+
+    // OFF par chalta hua vibration turant band
+    if (!on && navigator.vibrate) {
+      try { navigator.vibrate(0); } catch (e) { /* ignore */ }
+    }
+
+    updateAudioVibrateButton();
+    if (on) audioBuzz(60); // ON hone ka halka sanket
+
+    if (announce) {
+      showToast(on ? 'कंपन चालू: नई चौपाई पर हल्का कंपन' : 'कंपन बंद', '📳');
+    }
+  }
+
   function initAudioVibrate() {
     const btn = document.getElementById('btnAudioVibrate');
-    if (btn) btn.addEventListener('click', () => {
-      state.audioVibrate = !state.audioVibrate;
-      LS.set('agy_hanuman_audio_vibrate', state.audioVibrate ? 'on' : 'off');
-      updateAudioVibrateButton();
-      if (state.audioVibrate && navigator.vibrate) navigator.vibrate(60); // chalu hone ka sanket
-      showToast(state.audioVibrate ? 'कंपन चालू: नई चौपाई पर हल्का कंपन' : 'कंपन बंद', '📳');
-    });
+    if (btn) btn.addEventListener('click', () => setAudioVibrate(!state.audioVibrate, true));
     updateAudioVibrateButton();
   }
 
