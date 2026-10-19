@@ -576,6 +576,7 @@
     keepAwake: localStorage.getItem('agy_hanuman_keep_awake') !== 'off',
     jaapSound: localStorage.getItem('agy_hanuman_jaap_sound') !== 'off',
     jaapVibrate: localStorage.getItem('agy_hanuman_jaap_vibrate') !== 'off',
+    audioVibrate: localStorage.getItem('agy_hanuman_audio_vibrate') !== 'off',
     lineSpacing: localStorage.getItem('agy_hanuman_line_spacing') || 'normal'
   };
 
@@ -967,7 +968,7 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '❚❚';
+      dom.btnPlayMaster.innerHTML = '⏸';
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
@@ -1230,6 +1231,11 @@
       clearHighlights();
       activeCard.classList.add('active-playback');
       dom.body.classList.add('has-active-verse');
+
+      // Nayi chaupai shuru hone par halka kampan (audio chal raha ho aur option on ho)
+      if (state.audioVibrate && navigator.vibrate && !dom.audioElement.paused) {
+        navigator.vibrate(35);
+      }
 
       // Scroll strictly according to song progress, centered in visible reading window
       if (state.autoScroll && !isUserInteractingWithScroll) {
@@ -2401,6 +2407,26 @@
     }
   }
 
+  function updateAudioVibrateButton() {
+    const btn = document.getElementById('btnAudioVibrate');
+    if (!btn) return;
+    if (!navigator.vibrate) { btn.style.display = 'none'; return; } // iPhone me support nahi
+    btn.textContent = state.audioVibrate ? '📳 कंपन: चालू' : '📴 कंपन: बंद';
+    btn.classList.toggle('active', state.audioVibrate);
+  }
+
+  function initAudioVibrate() {
+    const btn = document.getElementById('btnAudioVibrate');
+    if (btn) btn.addEventListener('click', () => {
+      state.audioVibrate = !state.audioVibrate;
+      LS.set('agy_hanuman_audio_vibrate', state.audioVibrate ? 'on' : 'off');
+      updateAudioVibrateButton();
+      if (state.audioVibrate && navigator.vibrate) navigator.vibrate(60); // chalu hone ka sanket
+      showToast(state.audioVibrate ? 'कंपन चालू: नई चौपाई पर हल्का कंपन' : 'कंपन बंद', '📳');
+    });
+    updateAudioVibrateButton();
+  }
+
   function initJaapExtras() {
     const s = document.getElementById('jaapSoundBtn');
     const v = document.getElementById('jaapVibrateBtn');
@@ -2731,6 +2757,7 @@
     initResumeReading();
     initMediaSession();
     initJaapExtras();
+    initAudioVibrate();
 
     // अपनी MP3 चुनने पर उसे फोन में सेव करें और उसका सिंक पहचानें
     dom.customAudioInput.addEventListener('change', (e) => {

@@ -341,10 +341,10 @@
 
       <!-- Controls Row: Play/Pause, Speed, Repeat, Auto-Scroll, Local File Picker, Volume -->
       <div class="player-controls-row">
-        <!-- Main Play/Pause and Seek Buttons ❚❚-->
+        <!-- Main Play/Pause and Seek Buttons -->
         <div class="main-audio-btns">
           <button id="btnPlayMaster" class="btn-play-master" title="बजाएं (Play)" aria-label="बजाएं">
-            ▶&#xFE0E;
+            ▶
           </button>
           <!-- Playback Speed -->
           <button id="btnSpeed" class="chip-btn" title="प्लेबैक गति (Speed)" aria-label="प्लेबैक गति">
@@ -365,6 +365,10 @@
           <!-- Choose Local MP3 File -->
           <button id="btnChooseAudio" class="chip-btn" title="अपने फोन से पसंदीदा MP3 चुनें">
             📁 अपनी MP3 चुनें
+          </button>
+          <!-- Vibration on/off (nayi chaupai shuru hone par halka kampan) -->
+          <button id="btnAudioVibrate" class="chip-btn active" type="button" title="चौपाई बदलने पर कंपन" aria-label="कंपन चालू/बंद">
+            📳 कंपन: चालू
           </button>
           <input type="file" id="customAudioInput" accept="audio/*">
 
