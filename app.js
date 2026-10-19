@@ -1233,7 +1233,14 @@
       dom.body.classList.add('has-active-verse');
 
       // Nayi chaupai shuru hone par halka kampan (audioBuzz khud on/off check karta hai)
-      if (!dom.audioElement.paused) audioBuzz(35);
+      // Nayi chaupai shuru hone par halka kampan
+if (
+  state.audioVibrate &&
+  dom.audioElement &&
+  !dom.audioElement.paused
+) {
+  audioBuzz(35);
+}
 
       // Scroll strictly according to song progress, centered in visible reading window
       if (state.autoScroll && !isUserInteractingWithScroll) {
@@ -2405,43 +2412,75 @@
     }
   }
 
-  function updateAudioVibrateButton() {
-    const btn = document.getElementById('btnAudioVibrate');
-    if (!btn) return;
-    if (!navigator.vibrate) { btn.style.display = 'none'; return; } // iPhone me support nahi
-    btn.textContent = state.audioVibrate ? '📳 कंपन: चालू' : '📴 कंपन: बंद';
-    btn.classList.toggle('active', state.audioVibrate);
+ 
+function updateAudioVibrateButton() {
+  const btn = document.getElementById('btnAudioVibrate');
+  if (!btn) return;
+
+  if (!('vibrate' in navigator)) {
+    btn.style.display = 'none';
+    return;
   }
 
-  // Audio ke saare vibration sirf yahin se guzrenge
-  function audioBuzz(pattern) {
-    if (!state.audioVibrate || !navigator.vibrate) return;
-    try { navigator.vibrate(pattern); } catch (e) { /* ignore */ }
+  btn.style.display = '';
+  btn.textContent = state.audioVibrate
+    ? '📳 कंपन: चालू'
+    : '📴 कंपन: बंद';
+
+  btn.classList.toggle('active', state.audioVibrate);
+}
+
+// Audio vibration ka single control point
+function audioBuzz(pattern) {
+  if (!state.audioVibrate || !('vibrate' in navigator)) return;
+
+  try {
+    navigator.vibrate(pattern);
+  } catch (e) {
+    // Unsupported vibration request
   }
+}
 
-  // Audio vibration ON/OFF ka ek hi control point
-  function setAudioVibrate(on, announce) {
-    state.audioVibrate = !!on;
-    LS.set('agy_hanuman_audio_vibrate', on ? 'on' : 'off');
+function setAudioVibrate(on, announce) {
+  state.audioVibrate = !!on;
 
-    // OFF par chalta hua vibration turant band
-    if (!on && navigator.vibrate) {
-      try { navigator.vibrate(0); } catch (e) { /* ignore */ }
+  LS.set(
+    'agy_hanuman_audio_vibrate',
+    state.audioVibrate ? 'on' : 'off'
+  );
+
+  // OFF hote hi ongoing vibration cancel karo
+  if (!state.audioVibrate && 'vibrate' in navigator) {
+    try {
+      navigator.vibrate(0);
+    } catch (e) {
+      // Ignore unsupported vibration
     }
-
-    updateAudioVibrateButton();
-    if (on) audioBuzz(60); // ON hone ka halka sanket
-
-    if (announce) {
-      showToast(on ? 'कंपन चालू: नई चौपाई पर हल्का कंपन' : 'कंपन बंद', '📳');
-    }
   }
 
-  function initAudioVibrate() {
-    const btn = document.getElementById('btnAudioVibrate');
-    if (btn) btn.addEventListener('click', () => setAudioVibrate(!state.audioVibrate, true));
-    updateAudioVibrateButton();
+  updateAudioVibrateButton();
+
+  // ON karte hi vibration nahi hoga.
+  // Vibration sirf audio event se trigger hoga.
+
+  if (announce) {
+    showToast(
+      state.audioVibrate ? 'कंपन चालू' : 'कंपन बंद',
+      '📳'
+    );
   }
+}
+
+function initAudioVibrate() {
+  const btn = document.getElementById('btnAudioVibrate');
+  if (!btn) return;
+
+  btn.onclick = () => {
+    setAudioVibrate(!state.audioVibrate, true);
+  };
+
+  updateAudioVibrateButton();
+}
 
   function initJaapExtras() {
     const s = document.getElementById('jaapSoundBtn');
