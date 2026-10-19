@@ -967,7 +967,7 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '⏸';
+      dom.btnPlayMaster.innerHTML = '❚❚';
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
