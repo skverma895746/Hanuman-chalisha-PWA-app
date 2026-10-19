@@ -1061,7 +1061,7 @@
     });
 
     // Playback Speed Toggle (0.75x -> 1.0x -> 1.25x -> 1.5x)
-    const speeds = [0.75, 1.0, 1.25, 1.5];
+    const speeds = [0.5,0.75, 1.0, 1.25, 1.5];
     dom.btnSpeed.addEventListener('click', () => {
       const nextIdx = (speeds.indexOf(state.speed) + 1) % speeds.length;
       state.speed = speeds[nextIdx];
