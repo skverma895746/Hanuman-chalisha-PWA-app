@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hanuman-chalisa-v1.4.0';
+const CACHE_NAME = 'hanuman-chalisa-v1.5.0';
 
 const CORE_ASSETS = [
   './',
@@ -157,6 +157,43 @@ self.addEventListener('fetch', (event) => {
           'Content-Length': String(chunk.byteLength)
         }
       });
+    })());
+
+    return;
+  }
+
+  // App files (html / js / css / json): pehle network se TAAZA (taaki naya code hamesha aaye aur
+  // purani JS naye HTML ke saath mix na ho). Net na ho ya 4 sec se dheema ho to cache se chalayein.
+  const isAppFile =
+    requestURL.origin === self.location.origin &&
+    (request.mode === 'navigate' ||
+      ['script', 'style', 'document', 'manifest'].includes(request.destination) ||
+      /\.(?:js|css|html|json)$/.test(requestURL.pathname));
+
+  if (isAppFile) {
+    event.respondWith((async () => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 4000);
+      try {
+        const response = await fetch(request, { cache: 'no-cache', signal: controller.signal });
+        clearTimeout(timer);
+
+        if (response.ok && response.status === 200 && response.type === 'basic') {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(request, response.clone());
+        }
+        return response;
+      } catch (error) {
+        clearTimeout(timer);
+        const cached = await caches.match(request, { ignoreSearch: true });
+        if (cached) return cached;
+
+        if (request.mode === 'navigate') {
+          const home = await caches.match(new URL('./index.html', self.registration.scope).href);
+          if (home) return home;
+        }
+        return Response.error();
+      }
     })());
 
     return;

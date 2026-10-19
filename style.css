@@ -1040,7 +1040,7 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
   background: var(--bg-card-alt);
   border: 1px solid var(--border-card);
   color: var(--text-secondary);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 8px;
   border-radius: var(--radius-pill);
@@ -1612,45 +1612,65 @@ body.mode-audio-only .verse-bhavarth {
   padding: 6px 8px;
 }
 
-/* ---------- नया अपडेट banner ---------- */
+/* ---------- नया अपडेट banner (mobile: poori chaudai ka card) ---------- */
 .update-banner {
   position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 10px;
+  right: 10px;
+  max-width: 520px;
+  margin: 0 auto;
   z-index: 3000;
   display: flex;
   align-items: center;
   gap: 10px;
-  max-width: 94vw;
   background: linear-gradient(135deg, #3A180A, #5D1B00);
   color: #FFFDF9;
-  border: 1.5px solid var(--gold);
-  border-radius: var(--radius-pill);
-  padding: 8px 10px 8px 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  border: 1px solid var(--gold);
+  border-left: 5px solid var(--gold-bright);
+  border-radius: 14px;
+  padding: 10px 8px 10px 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.3s ease;
+  animation: update-in 0.3s ease;
+}
+@keyframes update-in {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.update-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.update-text small {
+  display: block;
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: #FFE0B2;
 }
 .update-go {
+  flex-shrink: 0;
   background: var(--gold-bright);
   color: #3A180A;
   border: 0;
   border-radius: var(--radius-pill);
-  padding: 6px 12px;
+  padding: 8px 14px;
   font-family: inherit;
-  font-weight: 700;
-  font-size: 0.8rem;
+  font-weight: 800;
+  font-size: 0.82rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 .update-close {
+  flex-shrink: 0;
   background: transparent;
   border: 0;
   color: #FFE0B2;
   cursor: pointer;
-  font-size: 1rem;
-  padding: 2px 6px;
+  font-size: 1.05rem;
+  padding: 6px 8px;
 }
 
 /* ---------- Tap-to-Sync panel ---------- */
@@ -1773,3 +1793,43 @@ body.mode-audio-only .verse-bhavarth {
 @media (prefers-reduced-motion: reduce) {
   .follow-btn, .resume-banner, .sync-panel, .update-banner { transition: none; animation: none; }
 }
+
+
+/* ==========================================================================
+   Player icons: sab ek hi style (line icons, round stroke, rang = text ka rang)
+   ========================================================================== */
+.ui-icon {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
+.ui-icon.filled { fill: currentColor; stroke: currentColor; stroke-width: 1.2; }
+
+.btn-play-master .ui-icon { width: 24px; height: 24px; }
+.btn-play-master .ui-icon.is-play { transform: translateX(1.5px); } /* triangle ko optically beech me laane ke liye */
+
+.btn-ctrl .ui-icon { width: 22px; height: 22px; }
+.track-icon { display: inline-flex; align-items: center; }
+.track-icon .ui-icon { width: 20px; height: 20px; }
+
+.chip-btn.has-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+.chip-btn.has-icon .ui-icon { width: 16px; height: 16px; }
+.chip-btn.has-icon .btn-label { white-space: nowrap; }
+
+/* Verse card ka "yahan se bajao" button: player wale play icon jaisa hi */
+.verse-play-btn { display: inline-flex; align-items: center; justify-content: center; }
+.verse-play-btn .ui-icon { width: 15px; height: 15px; }

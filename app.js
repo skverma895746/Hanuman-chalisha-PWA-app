@@ -584,6 +584,21 @@
      3. DOM ELEMENTS
      ========================================================================== */
 
+  // Player ke saare icons ek hi style me (24x24 line icons, rang = currentColor)
+  const ICONS = {
+    "play": "<svg class=\"ui-icon filled is-play\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7 4.8v14.4a.8.8 0 0 0 1.2.7l11.6-7.2a.8.8 0 0 0 0-1.4L8.2 4.1A.8.8 0 0 0 7 4.8z\"/></svg>",
+    "pause": "<svg class=\"ui-icon filled\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"6\" y=\"4.5\" width=\"4.2\" height=\"15\" rx=\"1.3\"/><rect x=\"13.8\" y=\"4.5\" width=\"4.2\" height=\"15\" rx=\"1.3\"/></svg>",
+    "speed": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4.2 18a9 9 0 1 1 15.6 0\"/><path d=\"M12 14l4-4.5\"/><circle cx=\"12\" cy=\"14\" r=\"1.1\" fill=\"currentColor\"/></svg>",
+    "loop": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M17 2.5l3.5 3.5L17 9.5\"/><path d=\"M3.5 11V9.5A3.5 3.5 0 0 1 7 6h13.5\"/><path d=\"M7 21.5L3.5 18 7 14.5\"/><path d=\"M20.5 13v1.5A3.5 3.5 0 0 1 17 18H3.5\"/></svg>",
+    "scroll": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7 6.5l5 5 5-5\"/><path d=\"M7 13l5 5 5-5\"/></svg>",
+    "folder": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.2h7.5A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z\"/></svg>",
+    "vib": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"8\" y=\"3.5\" width=\"8\" height=\"17\" rx=\"2.2\"/><path d=\"M4.5 9v6\"/><path d=\"M19.5 9v6\"/><path d=\"M1.8 11v2\"/><path d=\"M22.2 11v2\"/></svg>",
+    "viboff": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"8\" y=\"3.5\" width=\"8\" height=\"17\" rx=\"2.2\"/><path d=\"M4.5 9v6\"/><path d=\"M19.5 9v6\"/><path d=\"M1.8 11v2\"/><path d=\"M22.2 11v2\"/><path d=\"M3 3l18 18\"/></svg>",
+    "vol": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M11 5L6.5 9H3v6h3.5l4.5 4z\"/><path d=\"M15.5 8.7a4.7 4.7 0 0 1 0 6.6\"/><path d=\"M18.6 5.8a9 9 0 0 1 0 12.4\"/></svg>",
+    "mute": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M11 5L6.5 9H3v6h3.5l4.5 4z\"/><path d=\"M16 9.5l5 5\"/><path d=\"M21 9.5l-5 5\"/></svg>",
+    "music": "<svg class=\"ui-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 17.5V5.5l11-2v12\"/><circle cx=\"6\" cy=\"17.5\" r=\"3\"/><circle cx=\"17\" cy=\"15.5\" r=\"3\"/></svg>"
+  };
+
   const dom = {
     body: document.body,
     progressBar: document.getElementById('readingProgressBar'),
@@ -699,7 +714,7 @@
           <div class="verse-meta">
             <span class="verse-badge">${doha.label}</span>
             <div class="verse-actions">
-              <button class="verse-action-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${doha.start}, '${doha.label}')">▶</button>
+              <button class="verse-action-btn verse-play-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${doha.start}, '${doha.label}')">${ICONS.play}</button>
               <button class="verse-action-btn ${isBookmarked ? 'bookmarked' : ''}" title="बुकमार्क करें" onclick="window.hanumanApp.toggleBookmark('${doha.id}', '${doha.label}')">
                 ${isBookmarked ? '★' : '☆'}
               </button>
@@ -730,7 +745,7 @@
           <div class="verse-meta">
             <span class="verse-badge">चौपाई ${chaupai.num}</span>
             <div class="verse-actions">
-              <button class="verse-action-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${chaupai.start}, 'चौपाई ${chaupai.num}')">▶</button>
+              <button class="verse-action-btn verse-play-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${chaupai.start}, 'चौपाई ${chaupai.num}')">${ICONS.play}</button>
               <button class="verse-action-btn ${isBookmarked ? 'bookmarked' : ''}" title="बुकमार्क करें" onclick="window.hanumanApp.toggleBookmark('${verseId}', 'चौपाई ${chaupai.num}')">
                 ${isBookmarked ? '★' : '☆'}
               </button>
@@ -760,7 +775,7 @@
         <div class="verse-meta">
           <span class="verse-badge">${closing.label}</span>
           <div class="verse-actions">
-            <button class="verse-action-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${closing.start}, '${closing.label}')">▶</button>
+            <button class="verse-action-btn verse-play-btn" title="यहाँ से ऑडियो बजाएं (Play/Sync here)" onclick="window.hanumanApp.seekTo(${closing.start}, '${closing.label}')">${ICONS.play}</button>
             <button class="verse-action-btn ${isClosingBookmarked ? 'bookmarked' : ''}" title="बुकमार्क करें" onclick="window.hanumanApp.toggleBookmark('${closing.id}', '${closing.label}')">
               ${isClosingBookmarked ? '★' : '☆'}
             </button>
@@ -968,14 +983,14 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '❚❚';
+      dom.btnPlayMaster.innerHTML = ICONS.pause;
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
 
     audio.addEventListener('pause', () => {
       state.isPlaying = false;
-      dom.btnPlayMaster.innerHTML = '▶';
+      dom.btnPlayMaster.innerHTML = ICONS.play;
       dom.btnPlayMaster.title = 'बजाएं (Play)';
       dom.audioSpectrum.classList.remove('playing');
     });
@@ -1008,7 +1023,7 @@
     audio.addEventListener('ended', () => {
       if (!state.isLooping) {
         state.isPlaying = false;
-        dom.btnPlayMaster.innerHTML = '▶';
+        dom.btnPlayMaster.innerHTML = ICONS.play;
         dom.audioSpectrum.classList.remove('playing');
         clearHighlights();
       }
@@ -1061,12 +1076,13 @@
     });
 
     // Playback Speed Toggle (0.75x -> 1.0x -> 1.25x -> 1.5x)
-    const speeds = [0.5,0.75, 1.0, 1.25, 1.5];
+    const speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
     dom.btnSpeed.addEventListener('click', () => {
       const nextIdx = (speeds.indexOf(state.speed) + 1) % speeds.length;
       state.speed = speeds[nextIdx];
       audio.playbackRate = state.speed;
-      dom.btnSpeed.textContent = `${state.speed}x`;
+      const speedLabel = dom.btnSpeed.querySelector('.btn-label');
+      if (speedLabel) speedLabel.textContent = `${state.speed}x`; else dom.btnSpeed.textContent = `${state.speed}x`;
       showToast(`गति: ${state.speed}x`);
     });
 
@@ -1144,11 +1160,11 @@
 
   function updateMuteButtonUI() {
     if (state.isMuted) {
-      dom.btnMute.innerHTML = '🔇';
+      dom.btnMute.innerHTML = ICONS.mute;
       dom.btnMute.title = 'अनम्यूट करें';
       if (dom.volumeSlider) dom.volumeSlider.value = 0;
     } else {
-      dom.btnMute.innerHTML = '🔊';
+      dom.btnMute.innerHTML = ICONS.vol;
       dom.btnMute.title = 'म्यूट करें';
       if (dom.volumeSlider) dom.volumeSlider.value = dom.audioElement.volume || 1;
     }
@@ -1232,15 +1248,10 @@
       activeCard.classList.add('active-playback');
       dom.body.classList.add('has-active-verse');
 
-      // Nayi chaupai shuru hone par halka kampan (audioBuzz khud on/off check karta hai)
-      // Nayi chaupai shuru hone par halka kampan
-if (
-  state.audioVibrate &&
-  dom.audioElement &&
-  !dom.audioElement.paused
-) {
-  audioBuzz(35);
-}
+      // Nayi chaupai shuru hone par halka kampan (audio chal raha ho aur option on ho)
+      if (audioVibrateEnabled() && navigator.vibrate && !dom.audioElement.paused) {
+        navigator.vibrate(35);
+      }
 
       // Scroll strictly according to song progress, centered in visible reading window
       if (state.autoScroll && !isUserInteractingWithScroll) {
@@ -1278,6 +1289,12 @@ if (
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || Math.abs(dist) < 2) {
       window.scrollTo(0, targetY);
+      return;
+    }
+    // Lambi doori (seek / "chal rahi chaupai par jaao"): browser ka apna smooth scroll (jhatke nahi lagte).
+    // Paas wali agli chaupai par speed ke hisaab se apna animation.
+    if (Math.abs(dist) > window.innerHeight * 1.5) {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
       return;
     }
     const speed = state.speed || 1;
@@ -2271,7 +2288,7 @@ if (
     }
     tapSync.starts.push(Math.round(t * 100) / 100);
     tapSync.idx++;
-    audioBuzz(20); // audio vibration: button OFF hone par nahi chalega
+    if (navigator.vibrate) navigator.vibrate(20);
     if (tapSync.idx >= tapSync.timeline.length) { finishTapSync(); return; }
     renderSyncPanel();
   }
@@ -2311,7 +2328,7 @@ if (
       <div class="sync-line"></div>
       <button type="button" class="sync-tap" data-s="tap">✋ यह पंक्ति अभी शुरू हुई</button>
       <div class="sync-row">
-        <button type="button" class="chip-btn" data-s="play">⏯ चलाएँ / रोकें</button>
+        <button type="button" class="chip-btn has-icon" data-s="play">${ICONS.play}<span class="btn-label">चलाएँ / रोकें</span></button>
         <button type="button" class="chip-btn" data-s="undo">↶ पीछे</button>
         <button type="button" class="chip-btn" data-s="cancel">✖ रद्द</button>
       </div>
@@ -2412,75 +2429,33 @@ if (
     }
   }
 
- 
-function updateAudioVibrateButton() {
-  const btn = document.getElementById('btnAudioVibrate');
-  if (!btn) return;
-
-  if (!('vibrate' in navigator)) {
-    btn.style.display = 'none';
-    return;
+  // Audio kampan chalu hai ya nahi: hamesha saved setting se padhein (state se mismatch ka darr nahi)
+  function audioVibrateEnabled() {
+    return LS.get('agy_hanuman_audio_vibrate', 'on') !== 'off';
   }
 
-  btn.style.display = '';
-  btn.textContent = state.audioVibrate
-    ? '📳 कंपन: चालू'
-    : '📴 कंपन: बंद';
-
-  btn.classList.toggle('active', state.audioVibrate);
-}
-
-// Audio vibration ka single control point
-function audioBuzz(pattern) {
-  if (!state.audioVibrate || !('vibrate' in navigator)) return;
-
-  try {
-    navigator.vibrate(pattern);
-  } catch (e) {
-    // Unsupported vibration request
-  }
-}
-
-function setAudioVibrate(on, announce) {
-  state.audioVibrate = !!on;
-
-  LS.set(
-    'agy_hanuman_audio_vibrate',
-    state.audioVibrate ? 'on' : 'off'
-  );
-
-  // OFF hote hi ongoing vibration cancel karo
-  if (!state.audioVibrate && 'vibrate' in navigator) {
-    try {
-      navigator.vibrate(0);
-    } catch (e) {
-      // Ignore unsupported vibration
-    }
+  function updateAudioVibrateButton() {
+    const btn = document.getElementById('btnAudioVibrate');
+    if (!btn) return;
+    if (!navigator.vibrate) { btn.style.display = 'none'; return; } // iPhone me support nahi
+    const on = audioVibrateEnabled();
+    btn.innerHTML = (on ? ICONS.vib : ICONS.viboff) +
+      `<span class="btn-label">${on ? 'कंपन: चालू' : 'कंपन: बंद'}</span>`;
+    btn.classList.toggle('active', on);
   }
 
-  updateAudioVibrateButton();
-
-  // ON karte hi vibration nahi hoga.
-  // Vibration sirf audio event se trigger hoga.
-
-  if (announce) {
-    showToast(
-      state.audioVibrate ? 'कंपन चालू' : 'कंपन बंद',
-      '📳'
-    );
+  function initAudioVibrate() {
+    const btn = document.getElementById('btnAudioVibrate');
+    if (btn) btn.addEventListener('click', () => {
+      const turnOn = !audioVibrateEnabled();
+      LS.set('agy_hanuman_audio_vibrate', turnOn ? 'on' : 'off');
+      state.audioVibrate = turnOn;
+      updateAudioVibrateButton();
+      if (navigator.vibrate) navigator.vibrate(turnOn ? 60 : 0); // on: chhota sanket, off: chalta kampan turant band
+      showToast(turnOn ? 'कंपन चालू: नई चौपाई पर हल्का कंपन' : 'कंपन बंद', '📳');
+    });
+    updateAudioVibrateButton();
   }
-}
-
-function initAudioVibrate() {
-  const btn = document.getElementById('btnAudioVibrate');
-  if (!btn) return;
-
-  btn.onclick = () => {
-    setAudioVibrate(!state.audioVibrate, true);
-  };
-
-  updateAudioVibrateButton();
-}
 
   function initJaapExtras() {
     const s = document.getElementById('jaapSoundBtn');
@@ -2681,6 +2656,7 @@ function initAudioVibrate() {
   /* ---------- सेटिंग्स पैनल ---------- */
 
   const SETTINGS_TITLE = 'सेटिंग्स';
+  const APP_VERSION = '1.5.0';
 
   function renderSettings() {
     const chip = (act, val, label, on) =>
@@ -2752,6 +2728,8 @@ function initAudioVibrate() {
         </div>
         <div class="set-note">जप-गिनती, बुकमार्क, सेटिंग्स आदि एक फाइल में। नया फोन लेने पर यहीं से वापस ला सकते हैं। (अपनी MP3 फाइल इसमें शामिल नहीं)</div>
       </div>
+
+      <div class="set-note" style="text-align:center;margin-top:14px">ऐप संस्करण ${APP_VERSION}</div>
     `;
   }
 
@@ -2791,7 +2769,7 @@ function initAudioVibrate() {
   function showUpdateBanner() {
     if (document.querySelector('.update-banner')) return;
     const b = makeEl('div', 'update-banner', `
-      <span>🆕 ऐप का नया संस्करण तैयार है</span>
+      <span class="update-text">🆕 नया संस्करण तैयार है<small>ताज़ा करके नए बदलाव पाएँ</small></span>
       <button type="button" class="update-go">ताज़ा करें</button>
       <button type="button" class="update-close" aria-label="बाद में">✕</button>
     `);

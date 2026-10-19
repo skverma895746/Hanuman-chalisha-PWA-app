@@ -317,9 +317,9 @@
       <!-- Track Title & Spectrum Animation -->
       <div class="player-top-row">
         <div class="audio-track-info">
-          <span class="track-icon">🎵</span>
-          <span id="audioTrackName">श्रीहनुमानचालीसा(दिव्यशांतिधुन)</span>
-          <span id="audioSourceChip" class="chip-btn" style="font-size: 0.6rem; pointer-events: none;">इनबिल्ट</span>
+          <span class="track-icon"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V5.5l11-2v12"/><circle cx="6" cy="17.5" r="3"/><circle cx="17" cy="15.5" r="3"/></svg></span>
+          <span id="audioTrackName">श्री हनुमान चालीसा (दिव्य शांति धुन)</span>
+          <span id="audioSourceChip" class="chip-btn" style="font-size: 0.7rem; pointer-events: none;">इनबिल्ट</span>
         </div>
 
         <!-- Audio Spectrum Bars -->
@@ -344,38 +344,38 @@
         <!-- Main Play/Pause and Seek Buttons -->
         <div class="main-audio-btns">
           <button id="btnPlayMaster" class="btn-play-master" title="बजाएं (Play)" aria-label="बजाएं">
-            ▶
+            <svg class="ui-icon filled is-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8v14.4a.8.8 0 0 0 1.2.7l11.6-7.2a.8.8 0 0 0 0-1.4L8.2 4.1A.8.8 0 0 0 7 4.8z"/></svg>
           </button>
           <!-- Playback Speed -->
-          <button id="btnSpeed" class="chip-btn" title="प्लेबैक गति (Speed)" aria-label="प्लेबैक गति">
-            1.0x
+          <button id="btnSpeed" class="chip-btn has-icon" title="प्लेबैक गति (Speed)" aria-label="प्लेबैक गति">
+            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.2 18a9 9 0 1 1 15.6 0"/><path d="M12 14l4-4.5"/><circle cx="12" cy="14" r="1.1" fill="currentColor"/></svg><span class="btn-label">1.0x</span>
           </button>
           <!-- Repeat / Loop Mode -->
-          <button id="btnRepeat" class="chip-btn" title="दोहराएं / लूप (Repeat)" aria-label="लूप चालू/बंद">
-            🔁 लूप
+          <button id="btnRepeat" class="chip-btn has-icon" title="दोहराएं / लूप (Repeat)" aria-label="लूप चालू/बंद">
+            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 2.5l3.5 3.5L17 9.5"/><path d="M3.5 11V9.5A3.5 3.5 0 0 1 7 6h13.5"/><path d="M7 21.5L3.5 18 7 14.5"/><path d="M20.5 13v1.5A3.5 3.5 0 0 1 17 18H3.5"/></svg><span class="btn-label">लूप</span>
           </button>
           <!-- Auto Scroll Toggle -->
-          <button id="btnAutoScroll" class="chip-btn active" title="चौपाई के साथ ऑटो-स्क्रॉल" aria-label="ऑटो स्क्रॉल">
-            📜 ऑटो-स्क्रॉल
+          <button id="btnAutoScroll" class="chip-btn has-icon active" title="चौपाई के साथ ऑटो-स्क्रॉल" aria-label="ऑटो स्क्रॉल">
+            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6.5l5 5 5-5"/><path d="M7 13l5 5 5-5"/></svg><span class="btn-label">ऑटो-स्क्रॉल</span>
           </button>
         </div>
 
         <!-- Secondary Controls: Custom Audio Picker & Volume -->
         <div class="secondary-audio-controls">
           <!-- Choose Local MP3 File -->
-          <button id="btnChooseAudio" class="chip-btn" title="अपने फोन से पसंदीदा MP3 चुनें">
-            📁 अपनी MP3 चुनें
+          <button id="btnChooseAudio" class="chip-btn has-icon" title="अपने फोन से पसंदीदा MP3 चुनें">
+            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.2h7.5A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></svg><span class="btn-label">अपनी MP3 चुनें</span>
           </button>
           <!-- Vibration on/off (nayi chaupai shuru hone par halka kampan) -->
-          <button id="btnAudioVibrate" class="chip-btn active" type="button" title="चौपाई बदलने पर कंपन" aria-label="कंपन चालू/बंद">
-            📳 कंपन: चालू
+          <button id="btnAudioVibrate" class="chip-btn has-icon active" type="button" title="चौपाई बदलने पर कंपन" aria-label="कंपन चालू/बंद">
+            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3.5" width="8" height="17" rx="2.2"/><path d="M4.5 9v6"/><path d="M19.5 9v6"/><path d="M1.8 11v2"/><path d="M22.2 11v2"/></svg><span class="btn-label">कंपन: चालू</span>
           </button>
           <input type="file" id="customAudioInput" accept="audio/*">
 
           <!-- Volume / Mute Controls -->
           <div class="volume-wrapper">
             <button id="btnMute" class="btn-ctrl" title="म्यूट करें" aria-label="म्यूट">
-              🔊
+              <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6.5 9H3v6h3.5l4.5 4z"/><path d="M15.5 8.7a4.7 4.7 0 0 1 0 6.6"/><path d="M18.6 5.8a9 9 0 0 1 0 12.4"/></svg>
             </button>
             <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="वॉल्यूम">
           </div>
