@@ -967,7 +967,7 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '❚❚';
+      dom.btnPlayMaster.innerHTML = '⏸';
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
@@ -1949,7 +1949,7 @@
 
     resumeBanner = makeEl('div', 'resume-banner');
     resumeBanner.innerHTML = `
-      <span class="resume-text">📖 पिछली बार आप <b>${pos.label || 'यहाँ'}</b> पर थे</span>
+      <span class="resume-text">📖 <b>${pos.label || 'पिछली जगह'}</b><small>पिछली बार यहीं तक पढ़ा था</small></span>
       <button type="button" class="resume-go">वहीं से पढ़ें</button>
       <button type="button" class="resume-close" aria-label="बंद करें">✕</button>
     `;
