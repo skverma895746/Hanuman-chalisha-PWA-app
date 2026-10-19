@@ -967,7 +967,7 @@
     // Audio Playback Events
     audio.addEventListener('play', () => {
       state.isPlaying = true;
-      dom.btnPlayMaster.innerHTML = '⏸';
+      dom.btnPlayMaster.innerHTML = '❚❚';
       dom.btnPlayMaster.title = 'पॉज़ करें (Pause)';
       dom.audioSpectrum.classList.add('playing');
     });
@@ -1162,6 +1162,7 @@
   let userScrollTimeout = null;
 
   function markUserScrolling() {
+    scrollAnimToken++; // chalta hua auto-scroll animation turant ruk jaye
     isUserInteractingWithScroll = true;
     clearTimeout(userScrollTimeout);
     userScrollTimeout = setTimeout(() => {
@@ -1254,10 +1255,31 @@
     const visibleHeight = window.innerHeight - topOffset - bottomDockHeight;
     const targetY = cardTopAbsolute - topOffset - (visibleHeight - cardRect.height) / 2;
 
-    window.scrollTo({
-      top: Math.max(0, targetY),
-      behavior: 'smooth'
-    });
+    animateScrollTo(Math.max(0, targetY));
+  }
+
+  // Play-speed ke hisaab se scroll ki raftaar: 0.75x dheema, 1.5x tez (1x par ~650ms)
+  let scrollAnimToken = 0;
+  function animateScrollTo(targetY) {
+    const token = ++scrollAnimToken;
+    const startY = window.scrollY;
+    const dist = targetY - startY;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || Math.abs(dist) < 2) {
+      window.scrollTo(0, targetY);
+      return;
+    }
+    const speed = state.speed || 1;
+    const duration = Math.min(1000, Math.max(220, 650 / speed));
+    const t0 = performance.now();
+    const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    function step(now) {
+      if (token !== scrollAnimToken) return; // naya scroll ya user ne khud scroll kiya
+      const p = Math.min(1, (now - t0) / duration);
+      window.scrollTo(0, startY + dist * ease(p));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
 
   function clearHighlights() {
