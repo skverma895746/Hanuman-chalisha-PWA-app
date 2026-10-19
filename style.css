@@ -1040,7 +1040,7 @@ body.audio-playing.has-active-verse #section-chalisa .verse-card:not(.active-pla
   background: var(--bg-card-alt);
   border: 1px solid var(--border-card);
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   padding: 4px 8px;
   border-radius: var(--radius-pill);
