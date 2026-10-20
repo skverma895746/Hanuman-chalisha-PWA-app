@@ -10,285 +10,327 @@
      1. SACRED TEXT DATA REPOSITORY (संपूर्ण प्रामाणिक पाठ डेटा)
      ========================================================================== */
 
-  const CHALISA_DATA = {
-    openingDohas: [
-      {
-        id: "doha-1",
-        label: "दोहा १",
-        lines: [
-          "श्रीगुरु चरन सरोज रज निज मनु मुकुरु सुधारि।",
-          "बरनउँ रघुबर बिमल जसु जो दायकु फल चारि॥"
-        ],
-        bhavarth: "श्री गुरुदेव के चरण कमलों की धूलि से अपने मन रूपी दर्पण को पवित्र करके, मैं श्री रघुवीर के उस निर्मल यश का वर्णन करता हूँ, जो चारों फलों (धर्म, अर्थ, काम और मोक्ष) को देने वाला है।",
-        start: 0,
-        end: 7
-      },
-      {
-        id: "doha-2",
-        label: "दोहा २",
-        lines: [
-          "बुद्धिहीन तनु जानिके, सुमिरौं पवन-कुमार।",
-          "बल बुधि बिद्या देहु मोहिं, हरहु कलेस बिकार॥"
-        ],
-        bhavarth: "हे पवनपुत्र! मैं स्वयं को बुद्धिहीन जानकर आपका स्मरण करता हूँ। मुझे बल, बुद्धि और विद्या प्रदान कीजिए तथा मेरे समस्त क्लेशों व विकारों को दूर कीजिए।",
-        start: 7,
-        end: 14
-      }
-    ],
-    chaupais: [
-      {
-        num: 1,
-        lines: ["जय हनुमान ज्ञान गुन सागर।", "जय कपीस तिहुँ लोक उजागर॥"],
-        bhavarth: "ज्ञान और गुणों के अथाह सागर श्री हनुमान जी की जय हो! तीनों लोकों में वानरश्रेष्ठ आपकी कीर्ति का दिव्य प्रकाश फैला हुआ है।",
-        start: 14, end: 18
-      },
-      {
-        num: 2,
-        lines: ["राम दूत अतुलित बल धामा।", "अंजनि-पुत्र पवनसुत नामा॥"],
-        bhavarth: "आप भगवान श्री राम के अनन्य दूत और अतुलनीय बल के धाम हैं। आप माता अंजना के पुत्र तथा पवनसुत नाम से विख्यात हैं।",
-        start: 18, end: 22
-      },
-      {
-        num: 3,
-        lines: ["महाबीर बिक्रम बजरंगी।", "कुमति निवार सुमति के संगी॥"],
-        bhavarth: "हे महावीर! आप परम पराक्रमी और वज्र के समान सुदृढ़ अंग वाले हैं। आप कुबुद्धि को दूर करने वाले और सुबुद्धि (सद्बुद्धि) के सच्चे संगी हैं।",
-        start: 22, end: 26
-      },
-      {
-        num: 4,
-        lines: ["कंचन बरन बिराज सुबेसा।", "कानन कुंडल कुंचित केसा॥"],
-        bhavarth: "आपका शरीर सुवर्ण के समान तेजस्वी है और आप सुंदर वस्त्रों से सुशोभित हैं। कानों में स्वर्ण कुंडल और घुंघराले बाल अत्यंत शोभायमान हैं।",
-        start: 26, end: 30
-      },
-      {
-        num: 5,
-        lines: ["हाथ बज्र औ ध्वजा बिराजै।", "काँधे मूँज जनेऊ साजै॥"],
-        bhavarth: "आपके एक हाथ में वज्र और दूसरे में विजय ध्वजा शोभा पा रही है। आपके कंधे पर मूंज का बना पवित्र जनेऊ सुशोभित है।",
-        start: 30, end: 34
-      },
-      {
-        num: 6,
-        lines: ["संकर सुवन केसरीनंदन।", "तेज प्रताप महा जग बंदन॥"],
-        bhavarth: "आप भगवान शिव के रुद्रावतार और राजा केसरी के नंदन हैं। आपके महान तेज और प्रताप की वंदना संपूर्ण संसार करता है।",
-        start: 34, end: 38
-      },
-      {
-        num: 7,
-        lines: ["बिद्यावान गुनी अति चातुर।", "राम काज करिबे को आतुर॥"],
-        bhavarth: "आप समस्त विद्याओं के ज्ञाता, परम गुणी और अत्यंत चतुर हैं। भगवान श्री राम के प्रत्येक कार्य को सिद्ध करने के लिए सदैव तत्पर रहते हैं।",
-        start: 38, end: 42
-      },
-      {
-        num: 8,
-        lines: ["प्रभु चरित्र सुनिबे को रसिया।", "राम लखन सीता मन बसिया॥"],
-        bhavarth: "आप प्रभु श्री राम के चरित्र और कथा को सुनने के रसिक हैं। श्री राम, लक्ष्मण और माता सीता आपके हृदय में सदा वास करते हैं।",
-        start: 42, end: 46
-      },
-      {
-        num: 9,
-        lines: ["सूक्ष्म रूप धरि सियहिं दिखावा।", "बिकट रूप धरि लंक जरावा॥"],
-        bhavarth: "आपने अति सूक्ष्म रूप धारण करके माता सीता के दर्शन किए और विकराल रूप धारण करके राक्षसों की नगरी लंका को भस्म कर दिया।",
-        start: 46, end: 50
-      },
-      {
-        num: 10,
-        lines: ["भीम रूप धरि असुर सँहारे।", "रामचंद्र के काज सँवारे॥"],
-        bhavarth: "आपने विशाल और भयंकर भीम रूप धारण करके असुरों का संहार किया और इस प्रकार श्री रामचंद्र जी के सभी कार्यों को संवारा।",
-        start: 50, end: 54
-      },
-      {
-        num: 11,
-        lines: ["लाय सजीवन लखन जियाये।", "श्रीरघुबीर हरषि उर लाये॥"],
-        bhavarth: "आपने संजीवनी बूटी लाकर लक्ष्मण जी के प्राणों की रक्षा की, जिससे प्रसन्न होकर भगवान श्री राम ने आपको प्रेमपूर्वक हृदय से लगा लिया।",
-        start: 54, end: 58
-      },
-      {
-        num: 12,
-        lines: ["रघुपति कीन्ही बहुत बड़ाई।", "तुम मम प्रिय भरतहि सम भाई॥"],
-        bhavarth: "श्री राम जी ने आपकी अपार प्रशंसा करते हुए कहा कि 'हे हनुमान! तुम मुझे भरत के समान ही प्रिय भ्राता हो।'",
-        start: 58, end: 62
-      },
-      {
-        num: 13,
-        lines: ["सहस बदन तुम्हरो जस गावैं।", "अस कहि श्रीपति कंठ लगावैं॥"],
-        bhavarth: "'सहस्र फणों वाले शेषनाग भी तुम्हारा यशोगान करते हैं'—ऐसा कहकर लक्ष्मीपति भगवान श्री राम ने आपको पुनः कंठ से लगाया।",
-        start: 62, end: 66
-      },
-      {
-        num: 14,
-        lines: ["सनकादिक ब्रह्मादि मुनीसा।", "नारद सारद सहित अहीसा॥"],
-        bhavarth: "सनक, सनन्दन आदि ऋषिगण, ब्रह्मा जी सहित समस्त मुनीश्वर, नारद मुनि, माता सरस्वती और शेषनाग सभी आपका गुणगान करते हैं।",
-        start: 66, end: 70
-      },
-      {
-        num: 15,
-        lines: ["जम कुबेर दिगपाल जहाँ ते।", "कबि कोबिद कहि सके कहाँ ते॥"],
-        bhavarth: "यमराज, कुबेर और दसों दिशाओं के रक्षक (दिग्पाल) भी आपकी महिमा का वर्णन करने में असमर्थ हैं, तो फिर कोई सामान्य कवि या विद्वान कहाँ तक कह सकता है!",
-        start: 70, end: 74
-      },
-      {
-        num: 16,
-        lines: ["तुम उपकार सुग्रीवहिं कीन्हा।", "राम मिलाय राज पद दीन्हा॥"],
-        bhavarth: "आपने सुग्रीव पर महान उपकार किया; उन्हें श्री राम से मिलाया और फिर उन्हें किष्किंधा का राज्य पद दिलाया।",
-        start: 74, end: 78
-      },
-      {
-        num: 17,
-        lines: ["तुम्हरो मंत्र बिभीषन माना।", "लंकेस्वर भए सब जग जाना॥"],
-        bhavarth: "आपके परामर्श और मंत्र को विभीषण ने स्वीकार किया, जिसके फलस्वरूप वे लंका के राजा बने, यह सारा संसार जानता है।",
-        start: 78, end: 82
-      },
-      {
-        num: 18,
-        lines: ["जुग सहस्र जोजन पर भानू।", "लील्यो ताहि मधुर फल जानू॥"],
-        bhavarth: "जो सूर्य सहस्रों योजन की दूरी पर स्थित हैं, उन्हें आपने बाल्यकाल में एक मीठा फल समझकर अनायास ही निगल लिया था।",
-        start: 82, end: 86
-      },
-      {
-        num: 19,
-        lines: ["प्रभु मुद्रिका मेलि मुख माहीं।", "जलधि लाँघि गये अचरज नाहीं॥"],
-        bhavarth: "प्रभु श्री राम की दी हुई मुद्रिका (अंगूठी) को मुख में रखकर आपने विशाल समुद्र को लांघ लिया, इसमें कोई आश्चर्य नहीं है।",
-        start: 86, end: 90
-      },
-      {
-        num: 20,
-        lines: ["दुर्गम काज जगत के जेते।", "सुगम अनुग्रह तुम्हरे तेते॥"],
-        bhavarth: "संसार में जितने भी कठिन से कठिन कार्य हैं, वे आपकी असीम कृपा से अत्यंत सुगम और सहज हो जाते हैं।",
-        start: 90, end: 94
-      },
-      {
-        num: 21,
-        lines: ["राम दुआरे तुम रखवारे।", "होत न आज्ञा बिनु पैसारे॥"],
-        bhavarth: "आप श्री राम के राजद्वार के रक्षक और द्वारपाल हैं। आपकी आज्ञा और कृपा के बिना कोई उस दिव्य धाम में प्रवेश नहीं पा सकता।",
-        start: 94, end: 98
-      },
-      {
-        num: 22,
-        lines: ["सब सुख लहै तुम्हारी सरना।", "तुम रच्छक काहू को डर ना॥"],
-        bhavarth: "आपकी शरण में आने वाले को संसार के सभी सुख प्राप्त होते हैं। जिसके रक्षक आप स्वयं हों, उसे किसी का कोई भय नहीं रह जाता।",
-        start: 98, end: 102
-      },
-      {
-        num: 23,
-        lines: ["आपन तेज सम्हारो आपै।", "तीनों लोक हाँक तें काँपै॥"],
-        bhavarth: "आपके अपार तेज और वेग को केवल आप ही संभाल सकते हैं। आपके एक ही हुंकार से तीनों लोकों में भय का कंपन होने लगता है।",
-        start: 102, end: 106
-      },
-      {
-        num: 24,
-        lines: ["भूत पिसाच निकट नहिं आवै।", "महाबीर जब नाम सुनावै॥"],
-        bhavarth: "जहाँ भी महावीर श्री हनुमान जी का नाम उच्चारित होता है, वहाँ भूत-पिशाच और कोई भी नकारात्मक शक्ति समीप नहीं आ सकती।",
-        start: 106, end: 110
-      },
-      {
-        num: 25,
-        lines: ["नासै रोग हरै सब पीरा।", "जपत निरंतर हनुमत बीरा॥"],
-        bhavarth: "वीर हनुमान जी के पावन नाम का निरंतर जप करने से समस्त असाध्य रोग नष्ट हो जाते हैं और सभी पीड़ाएं दूर हो जाती हैं।",
-        start: 110, end: 114
-      },
-      {
-        num: 26,
-        lines: ["संकट तें हनुमान छुड़ावै।", "मन क्रम बचन ध्यान जो लावै॥"],
-        bhavarth: "जो भी भक्त मन, कर्म और वाणी से हनुमान जी का ध्यान करता है, हनुमान जी उसे जीवन के प्रत्येक संकट से मुक्त कर देते हैं।",
-        start: 114, end: 118
-      },
-      {
-        num: 27,
-        lines: ["सब पर राम तपस्वी राजा।", "तिन के काज सकल तुम साजा॥"],
-        bhavarth: "तपस्वी राजा श्री रामचंद्र जी सर्वश्रेष्ठ हैं; उनके भी समस्त कठिन कार्यों को आपने सहज ही सिद्ध कर दिया।",
-        start: 118, end: 122
-      },
-      {
-        num: 28,
-        lines: ["और मनोरथ जो कोई लावै।", "सोई अमित जीवन फल पावै॥"],
-        bhavarth: "आपकी शरण में जो कोई भी अपनी मनोकामना लेकर आता है, वह अपने जीवन में अनंत और अविनाशी फल प्राप्त करता है।",
-        start: 122, end: 126
-      },
-      {
-        num: 29,
-        lines: ["चारों जुग परताप तुम्हारा।", "है परसिद्ध जगत उजियारा॥"],
-        bhavarth: "सत्ययुग, त्रेता, द्वापर और कलियुग—चारों युगों में आपका प्रताप देदीप्यमान है और आपकी कीर्ति संपूर्ण विश्व को आलोकित करती है।",
-        start: 126, end: 130
-      },
-      {
-        num: 30,
-        lines: ["साधु संत के तुम रखवारे।", "असुर निकंदन राम दुलारे॥"],
-        bhavarth: "आप साधु-संतों और सज्जनों की रक्षा करने वाले, दुष्ट असुरों का नाश करने वाले तथा श्री राम के परम दुलारे हैं।",
-        start: 130, end: 134
-      },
-      {
-        num: 31,
-        lines: ["अष्ट सिद्धि नौ निधि के दाता।", "अस बर दीन जानकी माता॥"],
-        bhavarth: "आप आठों सिद्धियों और नौ निधियों के दाता हैं। यह महान वरदान आपको पूज्या माता जानकी (सीता जी) ने दिया है।",
-        start: 134, end: 138
-      },
-      {
-        num: 32,
-        lines: ["राम रसायन तुम्हरे पासा।", "सदा रहो रघुपति के दासा॥"],
-        bhavarth: "आपके पास 'राम नाम' रूपी अमोघ अमृत रसायन है। आप निरंतर भगवान श्री रघुनाथ जी के परम सेवक बने रहते हैं।",
-        start: 138, end: 142
-      },
-      {
-        num: 33,
-        lines: ["तुम्हरे भजन राम को पावै।", "जनम जनम के दुख बिसरावै॥"],
-        bhavarth: "आपका भजन करने से भगवान श्री राम की प्राप्ति होती है और जन्म-जन्मांतरों के समस्त संताप और दुख मिट जाते हैं।",
-        start: 142, end: 146
-      },
-      {
-        num: 34,
-        lines: ["अंत काल रघुबर पुर जाई।", "जहाँ जन्म हरि-भक्त कहाई॥"],
-        bhavarth: "आपकी कृपा से देहावसान के बाद भक्त श्री राम के परम धाम (साकेत लोक) जाता है और यदि पुनः जन्म ले, तो प्रभु का अनन्य भक्त कहलाता है।",
-        start: 146, end: 150
-      },
-      {
-        num: 35,
-        lines: ["और देवता चित्त न धरई।", "हनुमत सेइ सर्ब सुख करई॥"],
-        bhavarth: "चाहे अन्य किसी देवता का ध्यान न भी किया जाए, केवल हनुमान जी की अनन्य सेवा करने से ही समस्त सुखों की प्राप्ति हो जाती है।",
-        start: 150, end: 154
-      },
-      {
-        num: 36,
-        lines: ["संकट कटै मिटै सब पीरा।", "जो सुमिरै हनुमत बलबीरा॥"],
-        bhavarth: "जो भी महाबली वीर हनुमान जी का स्मरण करता है, उसके समस्त संकट कट जाते हैं और सारी पीड़ाएं नष्ट हो जाती हैं।",
-        start: 154, end: 158
-      },
-      {
-        num: 37,
-        lines: ["जै जै जै हनुमान गोसाईं।", "कृपा करहु गुरुदेव की नाईं॥"],
-        bhavarth: "हे स्वामी हनुमान जी महाराज! आपकी जय हो, जय हो, जय हो! आप सद्गुरु के समान मुझ पर अपनी असीम अनुकंपा कीजिए।",
-        start: 158, end: 162
-      },
-      {
-        num: 38,
-        lines: ["जो सत बार पाठ कर कोई।", "छूटहि बंदि महा सुख होई॥"],
-        bhavarth: "जो कोई भी इस हनुमान चालीसा का सौ बार (नियमित) पाठ करता है, वह भव-बंधन से मुक्त हो जाता है और परमानंद को प्राप्त करता है।",
-        start: 162, end: 166
-      },
-      {
-        num: 39,
-        lines: ["जो यह पढ़ै हनुमान चलीसा।", "होय सिद्धि साखी गौरीसा॥"],
-        bhavarth: "जो इस हनुमान चालीसा का नित्य श्रद्धापूर्वक पाठ करता है, उसके समस्त मनोरथ सिद्ध होते हैं—इसके साक्षी स्वयं भगवान शिव (गौरीश) हैं।",
-        start: 166, end: 170
-      },
-      {
-        num: 40,
-        lines: ["तुलसीदास सदा हरि चेरा।", "कीजै नाथ हृदय मँह डेरा॥"],
-        bhavarth: "तुलसीदास जी कहते हैं कि वे सदैव श्री हरि के सेवक हैं। हे नाथ! आप माता सीता और श्री राम सहित मेरे हृदय में सदा वास कीजिए।",
-        start: 170, end: 174
-      }
-    ],
-    closingDoha: {
-      id: "doha-3",
-      label: "समापन दोहा",
+const CHALISA_DATA = {
+  openingDohas: [
+    {
+      id: "doha-1",
+      label: "दोहा १",
       lines: [
-        "पवनतनय संकट हरन, मंगल मूरति रूप।",
-        "राम लखन सीता सहित, हृदय बसहु सुर भूप॥"
+        "श्रीगुरु चरन सरोज रज निज मनु मुकुरु सुधारि।",
+        "बरनउँ रघुबर बिमल जसु जो दायकु फल चारि॥"
       ],
-      bhavarth: "हे पवनपुत्र! आप समस्त संकटों को हरने वाले और साक्षात् मंगल की मूर्ति हैं। हे देवों के भी स्वामी! आप प्रभु श्री राम, लक्ष्मण और माता सीता के साथ सदैव मेरे हृदय में निवास कीजिए।",
-      start: 174,
-      end: 180
+      bhavarth: "श्री गुरुदेव के चरण कमलों की धूलि से अपने मन रूपी दर्पण को पवित्र करके, मैं श्री रघुवीर के उस निर्मल यश का वर्णन करता हूँ, जो चारों फलों (धर्म, अर्थ, काम और मोक्ष) को देने वाला है।",
+      start: 0,
+      end: 6
+    },
+    {
+      id: "doha-2",
+      label: "दोहा २",
+      lines: [
+        "बुद्धिहीन तनु जानिके, सुमिरौं पवन-कुमार।",
+        "बल बुधि बिद्या देहु मोहिं, हरहु कलेस बिकार॥"
+      ],
+      bhavarth: "हे पवनपुत्र! मैं स्वयं को बुद्धिहीन जानकर आपका स्मरण करता हूँ। मुझे बल, बुद्धि और विद्या प्रदान कीजिए तथा मेरे समस्त क्लेशों व विकारों को दूर कीजिए।",
+      start: 6,
+      end: 12
     }
-  };
+  ],
+
+  chaupais: [
+    {
+      num: 1,
+      lines: ["जय हनुमान ज्ञान गुन सागर।", "जय कपीस तिहुँ लोक उजागर॥"],
+      bhavarth: "ज्ञान और गुणों के अथाह सागर श्री हनुमान जी की जय हो! तीनों लोकों में वानरश्रेष्ठ आपकी कीर्ति का दिव्य प्रकाश फैला हुआ है।",
+      start: 12,
+      end: 16.05
+    },
+    {
+      num: 2,
+      lines: ["राम दूत अतुलित बल धामा।", "अंजनि-पुत्र पवनसुत नामा॥"],
+      bhavarth: "आप भगवान श्री राम के अनन्य दूत और अतुलनीय बल के धाम हैं। आप माता अंजना के पुत्र तथा पवनसुत नाम से विख्यात हैं।",
+      start: 16.05,
+      end: 20.1
+    },
+    {
+      num: 3,
+      lines: ["महाबीर बिक्रम बजरंगी।", "कुमति निवार सुमति के संगी॥"],
+      bhavarth: "हे महावीर! आप परम पराक्रमी और वज्र के समान सुदृढ़ अंग वाले हैं। आप कुबुद्धि को दूर करने वाले और सुबुद्धि (सद्बुद्धि) के सच्चे संगी हैं।",
+      start: 20.1,
+      end: 24.15
+    },
+    {
+      num: 4,
+      lines: ["कंचन बरन बिराज सुबेसा।", "कानन कुंडल कुंचित केसा॥"],
+      bhavarth: "आपका शरीर सुवर्ण के समान तेजस्वी है और आप सुंदर वस्त्रों से सुशोभित हैं। कानों में स्वर्ण कुंडल और घुंघराले बाल अत्यंत शोभायमान हैं।",
+      start: 24.15,
+      end: 28.2
+    },
+    {
+      num: 5,
+      lines: ["हाथ बज्र औ ध्वजा बिराजै।", "काँधे मूँज जनेऊ साजै॥"],
+      bhavarth: "आपके एक हाथ में वज्र और दूसरे में विजय ध्वजा शोभा पा रही है। आपके कंधे पर मूंज का बना पवित्र जनेऊ सुशोभित है।",
+      start: 28.2,
+      end: 32.25
+    },
+    {
+      num: 6,
+      lines: ["संकर सुवन केसरीनंदन।", "तेज प्रताप महा जग बंदन॥"],
+      bhavarth: "आप भगवान शिव के रुद्रावतार और राजा केसरी के नंदन हैं। आपके महान तेज और प्रताप की वंदना संपूर्ण संसार करता है।",
+      start: 32.25,
+      end: 36.3
+    },
+    {
+      num: 7,
+      lines: ["बिद्यावान गुनी अति चातुर।", "राम काज करिबे को आतुर॥"],
+      bhavarth: "आप समस्त विद्याओं के ज्ञाता, परम गुणी और अत्यंत चतुर हैं। भगवान श्री राम के प्रत्येक कार्य को सिद्ध करने के लिए सदैव तत्पर रहते हैं।",
+      start: 36.3,
+      end: 40.35
+    },
+    {
+      num: 8,
+      lines: ["प्रभु चरित्र सुनिबे को रसिया।", "राम लखन सीता मन बसिया॥"],
+      bhavarth: "आप प्रभु श्री राम के चरित्र और कथा को सुनने के रसिक हैं। श्री राम, लक्ष्मण और माता सीता आपके हृदय में सदा वास करते हैं।",
+      start: 40.35,
+      end: 44.4
+    },
+    {
+      num: 9,
+      lines: ["सूक्ष्म रूप धरि सियहिं दिखावा।", "बिकट रूप धरि लंक जरावा॥"],
+      bhavarth: "आपने अति सूक्ष्म रूप धारण करके माता सीता के दर्शन किए और विकराल रूप धारण करके राक्षसों की नगरी लंका को भस्म कर दिया।",
+      start: 44.4,
+      end: 48.45
+    },
+    {
+      num: 10,
+      lines: ["भीम रूप धरि असुर सँहारे।", "रामचंद्र के काज सँवारे॥"],
+      bhavarth: "आपने विशाल और भयंकर भीम रूप धारण करके असुरों का संहार किया और इस प्रकार श्री रामचंद्र जी के सभी कार्यों को संवारा।",
+      start: 48.45,
+      end: 52.5
+    },
+    {
+      num: 11,
+      lines: ["लाय सजीवन लखन जियाये।", "श्रीरघुबीर हरषि उर लाये॥"],
+      bhavarth: "आपने संजीवनी बूटी लाकर लक्ष्मण जी के प्राणों की रक्षा की, जिससे प्रसन्न होकर भगवान श्री राम ने आपको प्रेमपूर्वक हृदय से लगा लिया।",
+      start: 52.5,
+      end: 56.55
+    },
+    {
+      num: 12,
+      lines: ["रघुपति कीन्ही बहुत बड़ाई।", "तुम मम प्रिय भरतहि सम भाई॥"],
+      bhavarth: "श्री राम जी ने आपकी अपार प्रशंसा करते हुए कहा कि 'हे हनुमान! तुम मुझे भरत के समान ही प्रिय भ्राता हो।'",
+      start: 56.55,
+      end: 60.6
+    },
+    {
+      num: 13,
+      lines: ["सहस बदन तुम्हरो जस गावैं।", "अस कहि श्रीपति कंठ लगावैं॥"],
+      bhavarth: "'सहस्र फणों वाले शेषनाग भी तुम्हारा यशोगान करते हैं'—ऐसा कहकर लक्ष्मीपति भगवान श्री राम ने आपको पुनः कंठ से लगाया।",
+      start: 60.6,
+      end: 64.65
+    },
+    {
+      num: 14,
+      lines: ["सनकादिक ब्रह्मादि मुनीसा।", "नारद सारद सहित अहीसा॥"],
+      bhavarth: "सनक, सनन्दन आदि ऋषिगण, ब्रह्मा जी सहित समस्त मुनीश्वर, नारद मुनि, माता सरस्वती और शेषनाग सभी आपका गुणगान करते हैं।",
+      start: 64.65,
+      end: 68.7
+    },
+    {
+      num: 15,
+      lines: ["जम कुबेर दिगपाल जहाँ ते।", "कबि कोबिद कहि सके कहाँ ते॥"],
+      bhavarth: "यमराज, कुबेर और दसों दिशाओं के रक्षक (दिग्पाल) भी आपकी महिमा का वर्णन करने में असमर्थ हैं, तो फिर कोई सामान्य कवि या विद्वान कहाँ तक कह सकता है!",
+      start: 68.7,
+      end: 72.75
+    },
+    {
+      num: 16,
+      lines: ["तुम उपकार सुग्रीवहिं कीन्हा।", "राम मिलाय राज पद दीन्हा॥"],
+      bhavarth: "आपने सुग्रीव पर महान उपकार किया; उन्हें श्री राम से मिलाया और फिर उन्हें किष्किंधा का राज्य पद दिलाया।",
+      start: 72.75,
+      end: 76.8
+    },
+    {
+      num: 17,
+      lines: ["तुम्हरो मंत्र बिभीषन माना।", "लंकेस्वर भए सब जग जाना॥"],
+      bhavarth: "आपके परामर्श और मंत्र को विभीषण ने स्वीकार किया, जिसके फलस्वरूप वे लंका के राजा बने, यह सारा संसार जानता है।",
+      start: 76.8,
+      end: 80.85
+    },
+    {
+      num: 18,
+      lines: ["जुग सहस्र जोजन पर भानू।", "लील्यो ताहि मधुर फल जानू॥"],
+      bhavarth: "जो सूर्य सहस्रों योजन की दूरी पर स्थित हैं, उन्हें आपने बाल्यकाल में एक मीठा फल समझकर अनायास ही निगल लिया था।",
+      start: 80.85,
+      end: 84.9
+    },
+    {
+      num: 19,
+      lines: ["प्रभु मुद्रिका मेलि मुख माहीं।", "जलधि लाँघि गये अचरज नाहीं॥"],
+      bhavarth: "प्रभु श्री राम की दी हुई मुद्रिका (अंगूठी) को मुख में रखकर आपने विशाल समुद्र को लांघ लिया, इसमें कोई आश्चर्य नहीं है।",
+      start: 84.9,
+      end: 88.95
+    },
+    {
+      num: 20,
+      lines: ["दुर्गम काज जगत के जेते।", "सुगम अनुग्रह तुम्हरे तेते॥"],
+      bhavarth: "संसार में जितने भी कठिन से कठिन कार्य हैं, वे आपकी असीम कृपा से अत्यंत सुगम और सहज हो जाते हैं।",
+      start: 88.95,
+      end: 93
+    },
+    {
+      num: 21,
+      lines: ["राम दुआरे तुम रखवारे।", "होत न आज्ञा बिनु पैसारे॥"],
+      bhavarth: "आप श्री राम के राजद्वार के रक्षक और द्वारपाल हैं। आपकी आज्ञा और कृपा के बिना कोई उस दिव्य धाम में प्रवेश नहीं पा सकता।",
+      start: 93,
+      end: 97.05
+    },
+    {
+      num: 22,
+      lines: ["सब सुख लहै तुम्हारी सरना।", "तुम रच्छक काहू को डर ना॥"],
+      bhavarth: "आपकी शरण में आने वाले को संसार के सभी सुख प्राप्त होते हैं। जिसके रक्षक आप स्वयं हों, उसे किसी का कोई भय नहीं रह जाता।",
+      start: 97.05,
+      end: 101.1
+    },
+    {
+      num: 23,
+      lines: ["आपन तेज सम्हारो आपै।", "तीनों लोक हाँक तें काँपै॥"],
+      bhavarth: "आपके अपार तेज और वेग को केवल आप ही संभाल सकते हैं। आपके एक ही हुंकार से तीनों लोकों में भय का कंपन होने लगता है।",
+      start: 101.1,
+      end: 105.15
+    },
+    {
+      num: 24,
+      lines: ["भूत पिसाच निकट नहिं आवै।", "महाबीर जब नाम सुनावै॥"],
+      bhavarth: "जहाँ भी महावीर श्री हनुमान जी का नाम उच्चारित होता है, वहाँ भूत-पिशाच और कोई भी नकारात्मक शक्ति समीप नहीं आ सकती।",
+      start: 105.15,
+      end: 109.2
+    },
+    {
+      num: 25,
+      lines: ["नासै रोग हरै सब पीरा।", "जपत निरंतर हनुमत बीरा॥"],
+      bhavarth: "वीर हनुमान जी के पावन नाम का निरंतर जप करने से समस्त असाध्य रोग नष्ट हो जाते हैं और सभी पीड़ाएं दूर हो जाती हैं।",
+      start: 109.2,
+      end: 113.25
+    },
+    {
+      num: 26,
+      lines: ["संकट तें हनुमान छुड़ावै।", "मन क्रम बचन ध्यान जो लावै॥"],
+      bhavarth: "जो भी भक्त मन, कर्म और वाणी से हनुमान जी का ध्यान करता है, हनुमान जी उसे जीवन के प्रत्येक संकट से मुक्त कर देते हैं।",
+      start: 113.25,
+      end: 117.3
+    },
+    {
+      num: 27,
+      lines: ["सब पर राम तपस्वी राजा।", "तिन के काज सकल तुम साजा॥"],
+      bhavarth: "तपस्वी राजा श्री रामचंद्र जी सर्वश्रेष्ठ हैं; उनके भी समस्त कठिन कार्यों को आपने सहज ही सिद्ध कर दिया।",
+      start: 117.3,
+      end: 121.35
+    },
+    {
+      num: 28,
+      lines: ["और मनोरथ जो कोई लावै।", "सोई अमित जीवन फल पावै॥"],
+      bhavarth: "आपकी शरण में जो कोई भी अपनी मनोकामना लेकर आता है, वह अपने जीवन में अनंत और अविनाशी फल प्राप्त करता है।",
+      start: 121.35,
+      end: 125.4
+    },
+    {
+      num: 29,
+      lines: ["चारों जुग परताप तुम्हारा।", "है परसिद्ध जगत उजियारा॥"],
+      bhavarth: "सत्ययुग, त्रेता, द्वापर और कलियुग—चारों युगों में आपका प्रताप देदीप्यमान है और आपकी कीर्ति संपूर्ण विश्व को आलोकित करती है।",
+      start: 125.4,
+      end: 129.45
+    },
+    {
+      num: 30,
+      lines: ["साधु संत के तुम रखवारे।", "असुर निकंदन राम दुलारे॥"],
+      bhavarth: "आप साधु-संतों और सज्जनों की रक्षा करने वाले, दुष्ट असुरों का नाश करने वाले तथा श्री राम के परम दुलारे हैं।",
+      start: 129.45,
+      end: 133.5
+    },
+    {
+      num: 31,
+      lines: ["अष्ट सिद्धि नौ निधि के दाता।", "अस बर दीन जानकी माता॥"],
+      bhavarth: "आप आठों सिद्धियों और नौ निधियों के दाता हैं। यह महान वरदान आपको पूज्या माता जानकी (सीता जी) ने दिया है।",
+      start: 133.5,
+      end: 137.55
+    },
+    {
+      num: 32,
+      lines: ["राम रसायन तुम्हरे पासा।", "सदा रहो रघुपति के दासा॥"],
+      bhavarth: "आपके पास 'राम नाम' रूपी अमोघ अमृत रसायन है। आप निरंतर भगवान श्री रघुनाथ जी के परम सेवक बने रहते हैं।",
+      start: 137.55,
+      end: 141.6
+    },
+    {
+      num: 33,
+      lines: ["तुम्हरे भजन राम को पावै।", "जनम जनम के दुख बिसरावै॥"],
+      bhavarth: "आपका भजन करने से भगवान श्री राम की प्राप्ति होती है और जन्म-जन्मांतरों के समस्त संताप और दुख मिट जाते हैं।",
+      start: 141.6,
+      end: 145.65
+    },
+    {
+      num: 34,
+      lines: ["अंत काल रघुबर पुर जाई।", "जहाँ जन्म हरि-भक्त कहाई॥"],
+      bhavarth: "आपकी कृपा से देहावसान के बाद भक्त श्री राम के परम धाम (साकेत लोक) जाता है और यदि पुनः जन्म ले, तो प्रभु का अनन्य भक्त कहलाता है।",
+      start: 145.65,
+      end: 149.7
+    },
+    {
+      num: 35,
+      lines: ["और देवता चित्त न धरई।", "हनुमत सेइ सर्ब सुख करई॥"],
+      bhavarth: "चाहे अन्य किसी देवता का ध्यान न भी किया जाए, केवल हनुमान जी की अनन्य सेवा करने से ही समस्त सुखों की प्राप्ति हो जाती है।",
+      start: 149.7,
+      end: 153.75
+    },
+    {
+      num: 36,
+      lines: ["संकट कटै मिटै सब पीरा।", "जो सुमिरै हनुमत बलबीरा॥"],
+      bhavarth: "जो भी महाबली वीर हनुमान जी का स्मरण करता है, उसके समस्त संकट कट जाते हैं और सारी पीड़ाएं नष्ट हो जाती हैं।",
+      start: 153.75,
+      end: 157.8
+    },
+    {
+      num: 37,
+      lines: ["जै जै जै हनुमान गोसाईं।", "कृपा करहु गुरुदेव की नाईं॥"],
+      bhavarth: "हे स्वामी हनुमान जी महाराज! आपकी जय हो, जय हो, जय हो! आप सद्गुरु के समान मुझ पर अपनी असीम अनुकंपा कीजिए।",
+      start: 157.8,
+      end: 161.85
+    },
+    {
+      num: 38,
+      lines: ["जो सत बार पाठ कर कोई।", "छूटहि बंदि महा सुख होई॥"],
+      bhavarth: "जो कोई भी इस हनुमान चालीसा का सौ बार (नियमित) पाठ करता है, वह भव-बंधन से मुक्त हो जाता है और परमानंद को प्राप्त करता है।",
+      start: 161.85,
+      end: 165.9
+    },
+    {
+      num: 39,
+      lines: ["जो यह पढ़ै हनुमान चलीसा।", "होय सिद्धि साखी गौरीसा॥"],
+      bhavarth: "जो इस हनुमान चालीसा का नित्य श्रद्धापूर्वक पाठ करता है, उसके समस्त मनोरथ सिद्ध होते हैं—इसके साक्षी स्वयं भगवान शिव (गौरीश) हैं।",
+      start: 165.9,
+      end: 169.95
+    },
+    {
+      num: 40,
+      lines: ["तुलसीदास सदा हरि चेरा।", "कीजै नाथ हृदय मँह डेरा॥"],
+      bhavarth: "तुलसीदास जी कहते हैं कि वे सदैव श्री हरि के सेवक हैं। हे नाथ! आप माता सीता और श्री राम सहित मेरे हृदय में सदा वास कीजिए।",
+      start: 169.95,
+      end: 174
+    }
+  ],
+
+  closingDoha: {
+    id: "doha-3",
+    label: "समापन दोहा",
+    lines: [
+      "पवनतनय संकट हरन, मंगल मूरति रूप।",
+      "राम लखन सीता सहित, हृदय बसहु सुर भूप॥"
+    ],
+    bhavarth: "हे पवनपुत्र! आप समस्त संकटों को हरने वाले और साक्षात् मंगल की मूर्ति हैं। हे देवों के भी स्वामी! आप प्रभु श्री राम, लक्ष्मण और माता सीता के साथ सदैव मेरे हृदय में निवास कीजिए।",
+    start: 174,
+    end: 180
+  }
+};
 
   const BAJRANG_BAAN_DATA = {
     title: "श्री बजरंग बाण",
@@ -1075,16 +1117,29 @@
       }
     });
 
-    // Playback Speed Toggle (0.75x -> 1.0x -> 1.25x -> 1.5x)
-    const speeds = [1.25, 1.5, 1.75, 2.0,1.0, 0.75, 0.5, 0.25];
-    dom.btnSpeed.addEventListener('click', () => {
-      const nextIdx = (speeds.indexOf(state.speed) + 1) % speeds.length;
-      state.speed = speeds[nextIdx];
-      audio.playbackRate = state.speed;
-      const speedLabel = dom.btnSpeed.querySelector('.btn-label');
-      if (speedLabel) speedLabel.textContent = `${state.speed}x`; else dom.btnSpeed.textContent = `${state.speed}x`;
-      showToast(`गति: ${state.speed}x`);
-    });
+  const speeds = [1.25, 1.5, 1.75, 2.0, 1.0, 0.75, 0.5, 0.25];
+
+dom.btnSpeed.title = 'ऑटो-स्क्रॉल की गति (गाने की गति नहीं बदलेगी)';
+audio.playbackRate = 1;
+
+dom.btnSpeed.addEventListener('click', () => {
+  let currentIdx = speeds.indexOf(state.speed);
+
+  if (currentIdx === -1) currentIdx = 0;
+
+  const nextIdx = (currentIdx + 1) % speeds.length;
+  state.speed = speeds[nextIdx];
+
+  const speedLabel = dom.btnSpeed.querySelector('.btn-label');
+
+  if (speedLabel) {
+    speedLabel.textContent = `${state.speed}x`;
+  } else {
+    dom.btnSpeed.textContent = `${state.speed}x`;
+  }
+
+  showToast(`स्क्रॉल गति: ${state.speed}x`);
+});
 
     // Repeat / Loop Toggle
     dom.btnRepeat.addEventListener('click', () => {
@@ -1262,53 +1317,161 @@
     }
   }
 
-  // Centering card directly in the visible reading area (between sticky top nav and bottom audio dock)
-  function scrollToVerseCard(card) {
-    if (!card) return;
-    const navContainer = document.querySelector('.sangrah-nav-container');
-    const dock = document.getElementById('audioPlayerDock');
+ // ============================================================
+// SCROLL VERSE CARD INTO THE VISIBLE READING AREA
+// Respects sticky navigation and bottom audio dock.
+// Uses animateScrollTo() for speed-controlled scrolling.
+// ============================================================
 
-    const topOffset = navContainer ? navContainer.getBoundingClientRect().bottom : 70;
-    const bottomDockHeight = dock ? (window.innerHeight - dock.getBoundingClientRect().top) : 130;
+function scrollToVerseCard(card) {
+  if (!card || !card.isConnected) return;
 
-    const cardRect = card.getBoundingClientRect();
-    const cardTopAbsolute = cardRect.top + window.scrollY;
+  const navContainer = document.querySelector(
+    '.sangrah-nav-container'
+  );
 
-    const visibleHeight = window.innerHeight - topOffset - bottomDockHeight;
-    const targetY = cardTopAbsolute - topOffset - (visibleHeight - cardRect.height) / 2;
+  const dock = document.getElementById('audioPlayerDock');
 
-    animateScrollTo(Math.max(0, targetY));
+  // Sticky navigation ka visible bottom edge.
+  const navRect = navContainer
+    ? navContainer.getBoundingClientRect()
+    : null;
+
+  const topOffset = navRect
+    ? Math.max(0, Math.min(window.innerHeight, navRect.bottom))
+    : 70;
+
+  // Audio dock agar visible hai tabhi uski height calculate karo.
+  let bottomDockHeight = 0;
+
+  if (dock) {
+    const dockRect = dock.getBoundingClientRect();
+    const dockStyle = window.getComputedStyle(dock);
+
+    const dockVisible =
+      dockStyle.display !== 'none' &&
+      dockStyle.visibility !== 'hidden' &&
+      Number(dockStyle.opacity) !== 0 &&
+      dockRect.height > 0 &&
+      dockRect.width > 0 &&
+      dockRect.top < window.innerHeight &&
+      dockRect.bottom > 0;
+
+    if (dockVisible) {
+      bottomDockHeight = Math.max(
+        0,
+        window.innerHeight -
+          Math.max(0, dockRect.top)
+      );
+    }
   }
+
+  // Available reading area.
+  const visibleHeight = Math.max(
+    0,
+    window.innerHeight - topOffset - bottomDockHeight
+  );
+
+  const cardRect = card.getBoundingClientRect();
+  const cardTopAbsolute = cardRect.top + window.scrollY;
+
+  // Card ko available reading area ke center mein rakho.
+  let targetY =
+    cardTopAbsolute -
+    topOffset -
+    (visibleHeight - cardRect.height) / 2;
+
+  // Document ki valid scroll limits.
+  const maxScrollY = Math.max(
+    0,
+    document.documentElement.scrollHeight - window.innerHeight
+  );
+
+  targetY = Math.max(0, Math.min(targetY, maxScrollY));
+
+  // Existing speed-controlled animation.
+  animateScrollTo(targetY);
+}
 
   // Play-speed ke hisaab se scroll ki raftaar: 0.75x dheema, 1.5x tez (1x par ~650ms)
-  let scrollAnimToken = 0;
-  function animateScrollTo(targetY) {
-    const token = ++scrollAnimToken;
-    const startY = window.scrollY;
-    const dist = targetY - startY;
-    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || Math.abs(dist) < 2) {
-      window.scrollTo(0, targetY);
-      return;
-    }
-    // Lambi doori (seek / "chal rahi chaupai par jaao"): browser ka apna smooth scroll (jhatke nahi lagte).
-    // Paas wali agli chaupai par speed ke hisaab se apna animation.
-    if (Math.abs(dist) > window.innerHeight * 1.5) {
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
-      return;
-    }
-    const speed = state.speed || 1;
-    const duration = Math.min(1000, Math.max(220, 650 / speed));
-    const t0 = performance.now();
-    const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-    function step(now) {
-      if (token !== scrollAnimToken) return; // naya scroll ya user ne khud scroll kiya
-      const p = Math.min(1, (now - t0) / duration);
-      window.scrollTo(0, startY + dist * ease(p));
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+ // ============================================================
+// SAFE AUTO-SCROLL ANIMATION
+// 0.25x = slow, 1x = normal, 2x = fast
+// Audio playback speed remains unchanged.
+// ============================================================
+
+let scrollAnimToken = 0;
+
+function animateScrollTo(targetY) {
+  const token = ++scrollAnimToken;
+
+  const startY = window.scrollY;
+  const maxScrollY = Math.max(
+    0,
+    document.documentElement.scrollHeight - window.innerHeight
+  );
+
+  // Target ko valid scroll range mein rakho.
+  const destinationY = Math.max(
+    0,
+    Math.min(Number(targetY) || 0, maxScrollY)
+  );
+
+  const dist = destinationY - startY;
+
+  // Reduced-motion preference ka samman karo.
+  const reduceMotion =
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion || Math.abs(dist) < 2) {
+    window.scrollTo(0, destinationY);
+    return;
   }
+
+  // Current scroll speed: 0.25x se 2x tak.
+  const rawSpeed = Number(state.speed);
+  const speed = Number.isFinite(rawSpeed)
+    ? Math.max(0.25, Math.min(2, rawSpeed))
+    : 1;
+
+  // Distance ke hisaab se duration calculate karo.
+  // 1x par lagbhag 650ms per viewport height.
+  const viewportHeight = Math.max(1, window.innerHeight);
+  const distanceFactor = Math.abs(dist) / viewportHeight;
+
+const duration = (650 * distanceFactor) / speed;
+
+  const startTime = performance.now();
+
+  // Smooth ease-in/ease-out.
+  function ease(t) {
+    return t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function step(now) {
+    // Nayi animation shuru hui ho to purani ko rok do.
+    if (token !== scrollAnimToken) return;
+
+    const progress = Math.min(
+      1,
+      (now - startTime) / duration
+    );
+
+    const currentY =
+      startY + dist * ease(progress);
+
+    window.scrollTo(0, currentY);
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
 
   function clearHighlights() {
     const active = document.querySelectorAll('.verse-card.active-playback');
@@ -2205,8 +2368,9 @@
   }
 
   function revertToBuiltinTrack() {
-    idbDelete('customTrack').catch(() => {});
-    tapSyncCancel(true);
+       idbDelete('customTrack').catch(() => {});
+     LS.remove(SYNC_KEY); // उस MP3 का सेव किया सिंक भी हटे
+     tapSyncCancel(true);
     currentTrackKey = null;
     currentTrackName = '';
     customTimings = null;
@@ -2218,7 +2382,7 @@
     dom.audioTrackName.textContent = builtinTrackLabel;
     dom.audioSourceChip.textContent = builtinChipLabel;
     clearHighlights();
-    showToast('इनबिल्ट धुन पर लौट आए');
+    showToast('आपकी MP3 हटा दी गई • इनबिल्ट धुन लगी', '🗑');
   }
 
   function resetCustomSync() {
@@ -2726,7 +2890,7 @@
         <div class="set-row">
           <button type="button" class="chip-btn set-chip" data-act="sync-start">🎯 टैप-सिंक शुरू करें</button>
           ${customTimings ? '<button type="button" class="chip-btn set-chip" data-act="sync-reset">↺ सिंक रीसेट</button>' : ''}
-          ${hasCustom ? '<button type="button" class="chip-btn set-chip" data-act="sync-builtin">↩ इनबिल्ट धुन पर लौटें</button>' : ''}
+          ${hasCustom ? '<button type="button" class="chip-btn set-chip" data-act="sync-builtin">🗑 अपनी MP3 हटाएँ</button>' : ''}
         </div>
         <div class="set-note">${hasCustom
           ? 'गाना चलेगा; हर पद शुरू होते ही बड़े बटन को टैप करें। यह आपके फोन में ही सेव रहेगा।'
