@@ -576,7 +576,7 @@
     keepAwake: localStorage.getItem('agy_hanuman_keep_awake') !== 'off',
     jaapSound: localStorage.getItem('agy_hanuman_jaap_sound') !== 'off',
     jaapVibrate: localStorage.getItem('agy_hanuman_jaap_vibrate') !== 'off',
-    audioVibrate: localStorage.getItem('agy_hanuman_audio_vibrate') !== 'off',
+    audioVibrate: localStorage.getItem('agy_hanuman_audio_vibrate') === 'on',
     lineSpacing: localStorage.getItem('agy_hanuman_line_spacing') || 'normal'
   };
 
@@ -1250,7 +1250,7 @@
 
       // Nayi chaupai shuru hone par halka kampan (audio chal raha ho aur option on ho)
       if (audioVibrateEnabled() && navigator.vibrate && !dom.audioElement.paused) {
-        navigator.vibrate(35);
+        appVibrate('audio', 35);
       }
 
       // Scroll strictly according to song progress, centered in visible reading window
@@ -1405,7 +1405,7 @@
       if (state.jaapSound) playTempleBellChime(587.33, 0.6); // Bell sound on bead tap
 
       if (navigator.vibrate && state.jaapVibrate) {
-        navigator.vibrate(40); // Haptic feedback
+        appVibrate('jaap', 40); // Haptic feedback
       }
 
       // Check if 108 Mala completed
@@ -1414,7 +1414,7 @@
         state.malaCount++;
         if (state.jaapSound) playTempleBellChime(880, 2.0); // Grand temple bell sound on mala finish
         if (navigator.vibrate && state.jaapVibrate) {
-          navigator.vibrate([100, 50, 150]);
+          appVibrate('jaap', [100, 50, 150]);
         }
         showToast('॥ १ माला (१०८ जप) पूर्ण! ॥');
       }
@@ -1792,6 +1792,16 @@
     set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* ignore */ } },
     remove(key) { try { localStorage.removeItem(key); } catch (e) { /* ignore */ } }
   };
+
+  // ऐप की तरफ से फोन को भेजे गए कंपन गिनने के लिए (सेटिंग्स में "कंपन जाँच" दिखाती है)
+  const vibeStats = { audio: 0, jaap: 0, other: 0 };
+  function appVibrate(source, pattern) {
+    if (!navigator.vibrate) return false;
+    if (source === 'audio') vibeStats.audio++;
+    else if (source === 'jaap') vibeStats.jaap++;
+    else vibeStats.other++;
+    return navigator.vibrate(pattern);
+  }
 
   function makeEl(tag, className, html) {
     const node = document.createElement(tag);
@@ -2288,7 +2298,7 @@
     }
     tapSync.starts.push(Math.round(t * 100) / 100);
     tapSync.idx++;
-    if (navigator.vibrate) navigator.vibrate(20);
+    appVibrate('other', 20);
     if (tapSync.idx >= tapSync.timeline.length) { finishTapSync(); return; }
     renderSyncPanel();
   }
@@ -2431,7 +2441,7 @@
 
   // Audio kampan chalu hai ya nahi: hamesha saved setting se padhein (state se mismatch ka darr nahi)
   function audioVibrateEnabled() {
-    return LS.get('agy_hanuman_audio_vibrate', 'on') !== 'off';
+    return LS.get('agy_hanuman_audio_vibrate', 'off') === 'on'; // default BAND: har chaupai par buzz achha nahi lagta
   }
 
   function updateAudioVibrateButton() {
@@ -2451,7 +2461,7 @@
       LS.set('agy_hanuman_audio_vibrate', turnOn ? 'on' : 'off');
       state.audioVibrate = turnOn;
       updateAudioVibrateButton();
-      if (navigator.vibrate) navigator.vibrate(turnOn ? 60 : 0); // on: chhota sanket, off: chalta kampan turant band
+      if (navigator.vibrate) { if (turnOn) appVibrate('audio', 60); else navigator.vibrate(0); } // on: chhota sanket, off: chalta kampan turant band
       showToast(turnOn ? 'कंपन चालू: नई चौपाई पर हल्का कंपन' : 'कंपन बंद', '📳');
     });
     updateAudioVibrateButton();
@@ -2656,13 +2666,16 @@
   /* ---------- सेटिंग्स पैनल ---------- */
 
   const SETTINGS_TITLE = 'सेटिंग्स';
-  const APP_VERSION = '1.5.0';
+  const APP_VERSION = '1.5.2';
 
   function renderSettings() {
     const chip = (act, val, label, on) =>
       `<button type="button" class="chip-btn set-chip${on ? ' active' : ''}" data-act="${act}" data-val="${val}">${label}</button>`;
     const sleepOn = (m) => (m === 0 ? !sleepTimer.endAt : sleepTimer.minutes === m);
     const hasCustom = !!currentTrackKey;
+    const audioVibOn = audioVibrateEnabled();
+    const allVibeOn = audioVibOn && state.jaapVibrate;
+    const allVibeOff = !audioVibOn && !state.jaapVibrate;
 
     dom.modalTitle.textContent = SETTINGS_TITLE;
     dom.modalBody.innerHTML = `
@@ -2729,6 +2742,38 @@
         <div class="set-note">जप-गिनती, बुकमार्क, सेटिंग्स आदि एक फाइल में। नया फोन लेने पर यहीं से वापस ला सकते हैं। (अपनी MP3 फाइल इसमें शामिल नहीं)</div>
       </div>
 
+      <div class="set-section">
+        <div class="set-title">📳 कंपन और आवाज़ (पूरी ऐप)</div>
+        <div class="set-note" style="margin-top:0">ऐप का कंपन (ऑडियो + जप):</div>
+        <div class="set-row">
+          ${chip('vibe-all', 'on', 'सब चालू', allVibeOn)}
+          ${chip('vibe-all', 'off', 'सब बंद', allVibeOff)}
+        </div>
+        <div class="set-note">जप की घंटी की आवाज़:</div>
+        <div class="set-row">
+          ${chip('jaap-sound', 'on', '🔔 चालू', state.jaapSound)}
+          ${chip('jaap-sound', 'off', '🔕 बंद', !state.jaapSound)}
+        </div>
+        <div class="set-note">ध्यान दें: फोन का रिंग/वाइब्रेट/साइलेंट मोड ऐप से बदला नहीं जा सकता (ब्राउज़र इसकी अनुमति नहीं देता)। ऐप सिर्फ अपना कंपन और अपनी आवाज़ बदल सकती है।</div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">🔎 कंपन जाँच</div>
+        <div class="set-note" style="margin-top:0">
+          ऐप खुलने से अब तक ऐप ने फोन को कंपन के लिए कहा:<br>
+          ऑडियो: <b>${vibeStats.audio}</b> बार &nbsp;•&nbsp; जप: <b>${vibeStats.jaap}</b> बार
+        </div>
+        <div class="set-note">ऑडियो का कंपन बंद करके गाना चलाएँ, फिर यहाँ देखें। अगर ऑडियो <b>0</b> है और फोन फिर भी vibrate कर रहा है, तो वह फोन की अपनी सेटिंग (Touch/Haptic/Music vibration) है, ऐप की नहीं।</div>
+      </div>
+
+      <div class="set-section">
+        <div class="set-title">🛠 ऐप ठीक करें</div>
+        <div class="set-row">
+          <button type="button" class="chip-btn set-chip" data-act="repair">🔄 ताज़ा फाइलें लोड करें</button>
+        </div>
+        <div class="set-note">अगर कोई बटन या सेटिंग काम न करे (पुरानी फाइल अटकी हो) तो इसे दबाएँ। जप-गिनती, बुकमार्क और सेटिंग्स सुरक्षित रहेंगी।</div>
+      </div>
+
       <div class="set-note" style="text-align:center;margin-top:14px">ऐप संस्करण ${APP_VERSION}</div>
     `;
   }
@@ -2750,6 +2795,25 @@
       case 'theme': applyTheme(val); break;
       case 'lh': applyLineSpacing(val); break;
       case 'sleep': setSleepTimer(parseInt(val, 10) || 0); break;
+      case 'vibe-all': {
+        const on = val === 'on';
+        LS.set('agy_hanuman_audio_vibrate', on ? 'on' : 'off');
+        LS.set('agy_hanuman_jaap_vibrate', on ? 'on' : 'off');
+        state.audioVibrate = on;
+        state.jaapVibrate = on;
+        updateAudioVibrateButton();
+        updateJaapToggleButtons();
+        if (navigator.vibrate) { if (on) appVibrate('other', 60); else navigator.vibrate(0); }
+        showToast(on ? 'ऐप का कंपन चालू' : 'ऐप का सारा कंपन बंद', '📳');
+        break;
+      }
+      case 'jaap-sound':
+        state.jaapSound = val === 'on';
+        LS.set('agy_hanuman_jaap_sound', state.jaapSound ? 'on' : 'off');
+        updateJaapToggleButtons();
+        showToast(state.jaapSound ? 'जप की आवाज़ चालू' : 'जप की आवाज़ बंद', '🔔');
+        break;
+      case 'repair': repairApp(); return;
       case 'sync-start': startTapSync(); return;
       case 'sync-reset': resetCustomSync(); break;
       case 'sync-builtin': revertToBuiltinTrack(); break;
@@ -2764,16 +2828,37 @@
     renderSettings();
   }
 
+  /* ---------- ऐप ठीक करें: पुरानी cache/service-worker हटाकर ताज़ा फाइलें (डेटा सुरक्षित) ---------- */
+
+  async function repairApp() {
+    showToast('पुरानी फाइलें हटाकर ताज़ा लोड हो रही है…', '🛠');
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((r) => r.unregister()));
+    } catch (e) { /* ignore */ }
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    } catch (e) { /* ignore */ }
+    setTimeout(() => location.reload(), 700);
+  }
+
   /* ---------- नया अपडेट आने की सूचना ---------- */
 
-  function showUpdateBanner() {
+  function showUpdateBanner(opts) {
     if (document.querySelector('.update-banner')) return;
+    const o = Object.assign({
+      title: '🆕 नया संस्करण तैयार है',
+      sub: 'ताज़ा करके नए बदलाव पाएँ',
+      btn: 'ताज़ा करें',
+      onGo: () => location.reload()
+    }, opts || {});
     const b = makeEl('div', 'update-banner', `
-      <span class="update-text">🆕 नया संस्करण तैयार है<small>ताज़ा करके नए बदलाव पाएँ</small></span>
-      <button type="button" class="update-go">ताज़ा करें</button>
+      <span class="update-text">${o.title}<small>${o.sub}</small></span>
+      <button type="button" class="update-go">${o.btn}</button>
       <button type="button" class="update-close" aria-label="बाद में">✕</button>
     `);
-    b.querySelector('.update-go').addEventListener('click', () => location.reload());
+    b.querySelector('.update-go').addEventListener('click', o.onGo);
     b.querySelector('.update-close').addEventListener('click', () => b.remove());
     document.body.appendChild(b);
   }
@@ -2783,6 +2868,17 @@
   function initEnhancements() {
     builtinTrackLabel = dom.audioTrackName ? dom.audioTrackName.textContent : '';
     builtinChipLabel = dom.audioSourceChip ? dom.audioSourceChip.textContent : '';
+
+    // index.html और app.js अलग-अलग संस्करण की हों (अधूरा अपडेट) तो ठीक करने का बटन दिखाएँ
+    const htmlVersion = (document.querySelector('meta[name="app-version"]') || {}).content;
+    if (htmlVersion !== APP_VERSION) {
+      setTimeout(() => showUpdateBanner({
+        title: '⚠️ फाइलें अधूरी अपडेट हुई हैं',
+        sub: 'ठीक करें दबाएँ (आपका डेटा सुरक्षित रहेगा)',
+        btn: 'ठीक करें',
+        onGo: repairApp
+      }), 1200);
+    }
 
     applyLineSpacing(state.lineSpacing);
     initDockOffset();
