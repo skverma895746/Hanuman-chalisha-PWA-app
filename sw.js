@@ -27,7 +27,7 @@ const UA = (self.navigator && self.navigator.userAgent) || '';
 const IS_CHROMIUM = /Chrom(e|ium)\//.test(UA) && !/CriOS|EdgiOS|FxiOS/.test(UA);
 
 const AUDIO_URL = new URL(
-  './assets/audio/hanuman-chalisa-ambient.wav',
+  './assets/audio/hanuman-chalisa-ambient.mp3',
   self.registration.scope
 ).href;
 
@@ -39,7 +39,7 @@ self.addEventListener('install', (event) => {
     // Audio cache nahi hua to installation fail hogi.
     // App files hamesha network se taaza (HTTP cache ko bypass); badi audio file normal.
     await cache.addAll(
-      CORE_ASSETS.map((url) => (url.endsWith('.wav') ? url : new Request(url, { cache: 'reload' })))
+      CORE_ASSETS.map((url) => (url.endsWith('.mp3') ? url : new Request(url, { cache: 'reload' })))
     );
 
     // Optional files fail hone par app installation na rokein.
