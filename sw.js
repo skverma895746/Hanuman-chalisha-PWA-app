@@ -8,7 +8,7 @@ const CORE_ASSETS = [
   './aarti.css',
   './aarti.js',
   './manifest.json',
-  './assets/audio/hanuman-chalisa-ambient.wav'
+  './assets/audio/hanuman-chalisa-ambient.mp3'
 ];
 
 const OPTIONAL_ASSETS = [
