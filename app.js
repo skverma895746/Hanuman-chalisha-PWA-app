@@ -545,25 +545,67 @@ const CHALISA_DATA = {
     }
   };
 
-  const AARTI_DATA = {
-    title: "श्री हनुमान जी की आरती",
-    subtitle: "आरती कीजै हनुमान लला की (परम पावन दीप आरती)",
-    lines: [
-      "आरती कीजै हनुमान लला की। दुष्ट दलन रघुनाथ कला की॥",
-      "जाके बल से गिरिवर काँपै। रोग दोष जाके निकट न झाँपै॥",
-      "अंजनि पुत्र महा बलदाई। संतन के प्रभु सदा सहाई॥",
-      "दे बीड़ा रघुनाथ पठाए। लंका जारि सीय सुधि लाये॥",
-      "लंका सो कोट समुद्र सी खाई। जात पवनसुत बार न लाई॥",
-      "लंका जारि असुर संहारे। सियारामजी के काज संवारे॥",
-      "लक्ष्मण मूर्छित पड़े सकारे। आणि संजीवन प्रान उबारे॥",
-      "पैठि पताल तोरि जम-कारे। अहिरावण की भुजा उखारे॥",
-      "बायें भुजा असुर दल मारे। दहिने भुजा संत जन तारे॥",
-      "सुर नर मुनि जन आरती उतारें। जै जै जै हनुमान उचारें॥",
-      "कंचन थार कपूर लौ छाई। आरती करत अंजना माई॥",
-      "जो हनुमानजी की आरती गावै। बसि बैकुंठ परम पद पावै॥"
-    ],
-    bhavarth: "भगवान श्री राम के अनन्य सेवक, दुष्टों का नाश करने वाले, अंजना नंदन श्री हनुमान जी की आरती प्रेमपूर्वक कीजिए। जो भी यह आरती गाता है, वह जीवन में सभी सुख पाकर वैकुंठ पद प्राप्त करता है।"
+  const AARTIS_COLLECTION = {
+    hanuman: {
+      id: "hanuman",
+      title: "श्री हनुमान जी की आरती",
+      subtitle: "आरती कीजै हनुमान लला की (परम पावन दीप आरती)",
+      badge: "हनुमान आरती",
+      lines: [
+        "आरती कीजै हनुमान लला की। दुष्ट दलन रघुनाथ कला की॥",
+        "जाके बल से गिरिवर काँपै। रोग दोष जाके निकट न झाँपै॥",
+        "अंजनि पुत्र महा बलदाई। संतन के प्रभु सदा सहाई॥",
+        "दे बीड़ा रघुनाथ पठाए। लंका जारि सीय सुधि लाये॥",
+        "लंका सो कोट समुद्र सी खाई। जात पवनसुत बार न लाई॥",
+        "लंका जारि असुर संहारे। सियारामजी के काज संवारे॥",
+        "लक्ष्मण मूर्छित पड़े सकारे। आणि संजीवन प्रान उबारे॥",
+        "पैठि पताल तोरि जम-कारे। अहिरावण की भुजा उखारे॥",
+        "बायें भुजा असुर दल मारे। दहिने भुजा संत जन तारे॥",
+        "सुर नर मुनि जन आरती उतारें। जै जै जै हनुमान उचारें॥",
+        "कंचन थार कपूर लौ छाई। आरती करत अंजना माई॥",
+        "जो हनुमानजी की आरती गावै। बसि बैकुंठ परम पद पावै॥"
+      ],
+      bhavarth: "भगवान श्री राम के अनन्य सेवक, दुष्टों का नाश करने वाले, अंजना नंदन श्री हनुमान जी की आरती प्रेमपूर्वक कीजिए। जो भी यह आरती गाता है, वह जीवन में सभी सुख पाकर वैकुंठ पद प्राप्त करता है।"
+    },
+    ram: {
+      id: "ram",
+      title: "श्री रामचन्द्र कृपालु भजु मन",
+      subtitle: "गोस्वामी तुलसीदास कृत • परम पावन प्रभु श्री राम स्तुति व आरती",
+      badge: "श्री राम स्तुति",
+      lines: [
+        "श्रीरामचन्द्र कृपालु भजु मन हरण भवभय दारुणम्।",
+        "नवकंज-लोचन, कंज-मुख, कर-कंज, पद कंजारुणम्॥",
+        "कंदर्प अगणित अमित छवि, नवनील-नीरद सुन्दरम्।",
+        "पट पीत मानहु तड़ित रुचि शुचि नौमि जनक सुतावरम्॥",
+        "भजु दीनबंधु दिनेश दानव-दैत्य-वंश-निकंदनम्।",
+        "रघुनंद आनंदकंद कोशलचंद दशरथ-नंदनम्॥",
+        "सिर मुकुट कुंडल तिलक चारु उदारु अंग विभूषणम्।",
+        "आजानुभुज शर-चाप-धर, संग्राम-जित-खरदूषणम्॥",
+        "इति वदति तुलसीदास शंकर-शेष-मुनि-मन-रंजनम्।",
+        "मम हृदय-कंज निवास कुरु, कामादि खल-दल-मंजनम्॥"
+      ],
+      bhavarth: "हे मन! कृपालु श्री रामचंद्र जी का भजन कर, जो संसार के घोर भय को हरने वाले हैं। जिनके नेत्र, मुख, हाथ और चरण नवीन लाल कमल के समान हैं। तुलसीदास जी कहते हैं कि हे प्रभु! आप काम, क्रोध आदि दुष्टों का दलन करने वाले हैं, मेरे हृदय रूपी कमल में सदा निवास कीजिए।"
+    },
+    ramayan: {
+      id: "ramayan",
+      title: "श्री रामायण जी की आरती",
+      subtitle: "आरती श्री रामायण जी की • कीरति कलित ललित सिय-पी की",
+      badge: "रामायण आरती",
+      lines: [
+        "आरती श्री रामायण जी की। कीरति कलित ललित सिय-पी की॥",
+        "गावत ब्रह्मादिक मुनि नारद। बालमीक बिग्यान बिसारद॥",
+        "सुक सनकादिक सेष अरु सारद। बरनि पवनसुत कीरति नीकी॥",
+        "संत गावत संतन के हिय की। कीरति कलित ललित सिय-पी की॥",
+        "गावत बेद पुरान अष्टदस। छहो सास्त्र सब ग्रंथन को रस॥",
+        "मुनि जन धन संतन को सरबस। सार अंश सम्मत सबही की॥",
+        "कलिमल हरनि विषय रस फीकी। सुभग सिंगार मुक्ति जुबती की॥",
+        "दलन रोग भव मूरि अमी की। तात मात सब बिधि तुलसी की॥"
+      ],
+      bhavarth: "श्री रामायण जी की यह आरती समस्त पापों का हरण करने वाली और भवसागर से मुक्ति दिलाने वाली अमृतमयी संजीवनी है। ब्रह्मा, नारद, वाल्मीकि और स्वयं पवनसुत हनुमान जी इसका यशोगान करते हैं।"
+    }
   };
+
+  const AARTI_DATA = AARTIS_COLLECTION.hanuman;
 
   const NAMAVALI_108 = [
     "ॐ आञ्जनेयाय नमः", "ॐ महावीराय नमः", "ॐ हनूमते नमः", "ॐ मारुतात्मजाय नमः",
@@ -601,6 +643,7 @@ const CHALISA_DATA = {
 
   const state = {
     activeTab: 'chalisa',
+    activeAarti: 'hanuman',
     viewMode: 'all', // 'all', 'text-only', 'audio-only'
     theme: localStorage.getItem('agy_hanuman_theme') || 'light',
     fontScale: parseFloat(localStorage.getItem('agy_hanuman_font_scale')) || 1.0,
@@ -645,6 +688,7 @@ const CHALISA_DATA = {
     body: document.body,
     progressBar: document.getElementById('readingProgressBar'),
     themeToggleBtn: document.getElementById('themeToggleBtn'),
+    screenAwakeBtn: document.getElementById('screenAwakeBtn'),
     bookmarksBtn: document.getElementById('bookmarksBtn'),
     fontDecBtn: document.getElementById('fontDecBtn'),
     fontIncBtn: document.getElementById('fontIncBtn'),
@@ -836,6 +880,16 @@ const CHALISA_DATA = {
           <span class="bhavarth-label">सरल भावार्थ:</span> ${closing.bhavarth}
         </div>
       </article>
+
+      <!-- Chalisa Path Sampurna & Direct Aarti Jump Button -->
+      <div class="chalisa-complete-card">
+        <div class="complete-badge">🚩 पाठ फलितम् 🚩</div>
+        <h3 class="complete-title">॥ श्री हनुमान चालीसा पाठ संपूर्ण ॥</h3>
+        <p class="complete-subtitle">जो यह पढ़ै हनुमान चालीसा। होय सिद्धि साखी गौरीसा॥</p>
+        <button class="btn-goto-aarti" onclick="window.hanumanApp && window.hanumanApp.openAartiDirect()">
+          🪔 अब श्री हनुमान जी महाराज की आरती करें ➔
+        </button>
+      </div>
     `;
 
     container.innerHTML = html;
@@ -951,23 +1005,49 @@ const CHALISA_DATA = {
     const container = dom.sections.aarti;
     if (!container) return;
 
+    const currentAarti = AARTIS_COLLECTION[state.activeAarti] || AARTIS_COLLECTION.hanuman;
+
     let html = `
       <div class="stotra-heading-card">
-        <h2 class="stotra-title">${AARTI_DATA.title}</h2>
-        <p class="stotra-subtitle">${AARTI_DATA.subtitle}</p>
+        <h2 class="stotra-title">${currentAarti.title}</h2>
+        <p class="stotra-subtitle">${currentAarti.subtitle}</p>
       </div>
+
+      <!-- Aarti Selection Sub-Tabs & Interactive Thali -->
+      <div class="aarti-interactive-container">
+        <!-- Sub-Tabs -->
+        <div class="aarti-tabs-bar">
+          <button class="aarti-tab-pill ${state.activeAarti === 'hanuman' ? 'active' : ''}" onclick="window.hanumanApp && window.hanumanApp.switchAarti('hanuman')">
+            🚩 हनुमान आरती
+          </button>
+          <button class="aarti-tab-pill ${state.activeAarti === 'ram' ? 'active' : ''}" onclick="window.hanumanApp && window.hanumanApp.switchAarti('ram')">
+            🏹 श्री राम स्तुति
+          </button>
+          <button class="aarti-tab-pill ${state.activeAarti === 'ramayan' ? 'active' : ''}" onclick="window.hanumanApp && window.hanumanApp.switchAarti('ramayan')">
+            📖 रामायण आरती
+          </button>
+        </div>
+
+        <div class="aarti-open-row">
+          <button class="aarti-open-pill" onclick="window.hanumanApp.toggleAartiDock()">🪔 आरती थाल खोलें</button>
+        </div>
+      </div>
+
+      <!-- Active Aarti Verses Card -->
       <article class="verse-card" id="aarti-full">
         <div class="verse-meta">
-          <span class="verse-badge">दीप आरती</span>
-          <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('aarti-full')">📋</button>
-          <button class="verse-action-btn" title="शेयर करें" onclick="window.hanumanApp.shareVerse('aarti-full')">↗</button>
-              <button class="verse-action-btn" title="इमेज बनाकर शेयर करें" onclick="window.hanumanApp.shareVerseImage('aarti-full')">🖼</button>
+          <span class="verse-badge">${currentAarti.badge}</span>
+          <div class="verse-actions">
+            <button class="verse-action-btn" title="कॉपी करें" onclick="window.hanumanApp.copyVerse('aarti-full')">📋</button>
+            <button class="verse-action-btn" title="शेयर करें" onclick="window.hanumanApp.shareVerse('aarti-full')">↗</button>
+            <button class="verse-action-btn" title="इमेज बनाकर शेयर करें" onclick="window.hanumanApp.shareVerseImage('aarti-full')">🖼</button>
+          </div>
         </div>
-        <div class="verse-text" style="line-height: calc(2.1 * var(--lh-mult, 1));">
-          ${AARTI_DATA.lines.join('<br>')}
+        <div class="verse-text" style="line-height: calc(2.15 * var(--lh-mult, 1));">
+          ${currentAarti.lines.join('<br>')}
         </div>
         <div class="verse-bhavarth visible" style="margin-top:14px;">
-          <span class="bhavarth-label">महात्म्य:</span> ${AARTI_DATA.bhavarth}
+          <span class="bhavarth-label">महात्म्य व भावार्थ:</span> ${currentAarti.bhavarth}
         </div>
       </article>
     `;
@@ -1016,7 +1096,7 @@ const CHALISA_DATA = {
     if (!audio) return;
 
     // Default Audio Source: Local high-quality devotional ambient track
-    audio.src = 'assets/audio/hanuman-chalisa-ambient.wav';
+    audio.src = 'assets/audio/hanuman-chalisa-ambient.mp3';
     audio.load();
 
     // Play / Pause Master Toggle
@@ -1522,8 +1602,8 @@ const duration = (650 * distanceFactor) / speed;
   }
 
   function applyFontScale(scale, announce) {
-    const clamped = Math.min(Math.max(scale, 0.8), 2.0);
-    state.fontScale = Math.round(clamped * 10) / 10;
+    const clamped = Math.min(Math.max(scale, 0.70), 2.2);
+    state.fontScale = Math.round(clamped * 100) / 100;
     document.documentElement.style.setProperty('--font-scale', `${state.fontScale}rem`);
     try { localStorage.setItem('agy_hanuman_font_scale', state.fontScale.toString()); } catch (e) {}
     if (announce) {
@@ -1675,6 +1755,48 @@ const duration = (650 * distanceFactor) / speed;
         this.copyVerse(id);
         showToast('शेयर हेतु टेक्स्ट कॉपी कर लिया गया है!');
       }
+    },
+
+    switchAarti: function (aartiId) {
+      if (AARTIS_COLLECTION[aartiId]) {
+        state.activeAarti = aartiId;
+        renderAarti();
+        showToast(`${AARTIS_COLLECTION[aartiId].title} लोड हुई`, '🪔');
+      }
+    },
+
+    ringTempleBell: function () {
+      playTempleBellChime(659.25, 2.0);
+      if (navigator.vibrate) navigator.vibrate(60);
+      showToast('🔔 मंगल घंटी नाद', '🔔');
+    },
+
+    showerFlowers: function () {
+      playTempleBellChime(783.99, 1.2);
+      const flowers = ['🌸', '🌺', '🌼', '🏵️', '💐', '🌹'];
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const petal = document.createElement('div');
+          petal.className = 'falling-flower-petal';
+          petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+          petal.style.left = `${Math.random() * 95}vw`;
+          petal.style.animationDuration = `${2.5 + Math.random() * 2}s`;
+          petal.style.fontSize = `${1.2 + Math.random() * 1}rem`;
+          document.body.appendChild(petal);
+          setTimeout(() => petal.remove(), 4500);
+        }, i * 110);
+      }
+      showToast('🌸 दिव्य पुष्प वर्षा!', '🌸');
+    },
+
+    openAartiDirect: function () {
+      switchTab('aarti');
+      showToast('🪔 श्री आरती एवं दीप थाल', '🪔');
+    },
+
+    openJaapDirect: function () {
+      switchTab('jaap');
+      showToast('📿 १०८ जप माला काउंटर', '📿');
     }
   };
 
@@ -1813,6 +1935,17 @@ const duration = (650 * distanceFactor) / speed;
     // Theme Toggle
     dom.themeToggleBtn.addEventListener('click', toggleTheme);
 
+    // Screen Keep Awake Toggle Button (Header)
+    if (dom.screenAwakeBtn) {
+      dom.screenAwakeBtn.classList.toggle('active', state.keepAwake);
+      dom.screenAwakeBtn.addEventListener('click', () => {
+        const next = !state.keepAwake;
+        setKeepAwake(next);
+        dom.screenAwakeBtn.classList.toggle('active', next);
+        showToast(next ? '📱 स्क्रीन हमेशा ऑन रहेगी' : '📱 स्क्रीन टाइमआउट सामान्य');
+      });
+    }
+
     // Bookmarks Modal
     dom.bookmarksBtn.addEventListener('click', showBookmarksModal);
     dom.modalCloseBtn.addEventListener('click', () => dom.modalOverlay.classList.remove('open'));
@@ -1820,9 +1953,9 @@ const duration = (650 * distanceFactor) / speed;
       if (e.target === dom.modalOverlay) dom.modalOverlay.classList.remove('open');
     });
 
-    // Font Controls
-    dom.fontDecBtn.addEventListener('click', () => applyFontScale(state.fontScale - 0.1, true));
-    dom.fontIncBtn.addEventListener('click', () => applyFontScale(state.fontScale + 0.1, true));
+    // Font Controls (15% Step Scaling for Dohas, Chaupais & Mantras)
+    dom.fontDecBtn.addEventListener('click', () => applyFontScale(state.fontScale - 0.15, true));
+    dom.fontIncBtn.addEventListener('click', () => applyFontScale(state.fontScale + 0.15, true));
     dom.fontResetBtn.addEventListener('click', () => applyFontScale(1.0, true));
 
     // View Mode Selector

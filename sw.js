@@ -1,11 +1,12 @@
-
-const CACHE_NAME = 'hanuman-chalisa-v1.5.2';
+const CACHE_NAME = 'hanuman-chalisa-v1.6.0';
 
 const CORE_ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './aarti.css',
+  './aarti.js',
   './manifest.json',
   './assets/audio/hanuman-chalisa-ambient.wav'
 ];
@@ -16,7 +17,10 @@ const OPTIONAL_ASSETS = [
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/hanuman-icon.png',
-  './assets/images/hanuman-hero.jpg'
+  './assets/images/hanuman-hero.jpg',
+  // आरती की वैकल्पिक आवाज़ें - फ़ाइल न हो तो बस छूट जाती हैं (install नहीं रुकता)
+  './assets/audio/shankh.mp3',
+  './assets/audio/dhol-nagada.mp3'
 ];
 
 const UA = (self.navigator && self.navigator.userAgent) || '';

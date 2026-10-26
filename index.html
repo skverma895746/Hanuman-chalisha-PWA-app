@@ -50,6 +50,7 @@
 
   <!-- Custom Devotional Stylesheet -->
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="aarti.css">
 
   <!-- ================= Schema.org JSON-LD Structured Data for Google Indexing ================= -->
   <script type="application/ld+json">
@@ -138,9 +139,18 @@
       </div>
 
       <div class="header-actions">
+        <!-- आरती थाल खोलें (ऊपर-दाएँ) -->
+        <button id="aartiOpenBtn" class="aarti-open-btn" type="button" aria-expanded="false" aria-controls="aartiTemple" aria-label="आरती थाल खोलें" title="दीप आरती थाल खोलें">
+          <svg class="aarti-open-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="aarti-open-flame" d="M16 2.5c3 4 4.6 6.6 4.6 9.2a4.6 4.6 0 0 1-9.2 0c0-2.600 1.600-5.200 4.600-9.200z" fill="#FFD54F"/><path d="M16 8c1.400 2 2 3.300 2 4.600a2 2 0 0 1-4 0c0-1.300.6-2.600 2-4.600z" fill="#FFF8E1"/><path d="M3 16h26c0 6-5.500 11-13 11S3 22 3 16z" fill="#FFB300" stroke="#7B3F00" stroke-width="1.500"/><ellipse cx="16" cy="16" rx="13" ry="2.600" fill="#8D4B00"/></svg>
+          <span class="aarti-open-text">आरती</span>
+        </button>
         <!-- Bookmark Modal Trigger -->
         <button id="bookmarksBtn" class="icon-btn" title="पसंदीदा / बुकमार्क" aria-label="पसंदीदा चौपाइयाँ">
           ★
+        </button>
+        <!-- Screen Keep Awake Toggle -->
+        <button id="screenAwakeBtn" class="icon-btn active" title="स्क्रीन हमेशा ऑन रखें (Screen On)" aria-label="स्क्रीन ऑन रखें">
+          📱
         </button>
         <!-- Light / Dark Mode Toggle -->
         <button id="themeToggleBtn" class="icon-btn" title="रात्रि / दिन का रूप" aria-label="थीम बदलें">
@@ -163,6 +173,16 @@
       </div>
       <div class="hero-subquote">
         सकलगुणनिधानं वानराणामधीशं, रघुपतिप्रियभक्तं वातजातं नमामि॥
+      </div>
+
+      <!-- Quick Action Buttons for Direct Aarti and Jaap -->
+      <div class="hero-quick-actions">
+        <button class="hero-quick-btn" onclick="window.hanumanApp && window.hanumanApp.openAartiDirect()">
+          🪔 दीप आरती थाल
+        </button>
+        <button class="hero-quick-btn" onclick="window.hanumanApp && window.hanumanApp.openJaapDirect()">
+          📿 १०८ जप माला
+        </button>
       </div>
     </div>
   </header>
@@ -403,5 +423,6 @@
 
   <!-- Main JavaScript Application Engine -->
   <script src="app.js"></script>
+  <script src="aarti.js"></script>
 </body>
 </html>
